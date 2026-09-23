@@ -25,6 +25,31 @@ namespace TechStackLearningHub.DAL
             return (int)DbHelper.ExecuteScalar(conn, tx, sql, parameters);
         }
 
+        public Result GetLatestResultByUserAndQuiz(int userId, int quizId)
+        {
+            const string sql = "SELECT TOP 1 ResultID, UserID, QuizID, Score, AttemptDate, IsPassed " +
+                               "FROM Results WHERE UserID = @UserId AND QuizID = @QuizId " +
+                               "ORDER BY AttemptDate DESC";
+            DataTable table = DbHelper.ExecuteQuery(sql, new SqlParameter[]
+            {
+                new SqlParameter("@UserId", userId),
+                new SqlParameter("@QuizId", quizId)
+            });
+            if (table.Rows.Count == 0)
+                return null;
+
+            var row = table.Rows[0];
+            return new Result
+            {
+                ResultID = (int)row["ResultID"],
+                UserID = (int)row["UserID"],
+                QuizID = (int)row["QuizID"],
+                Score = (decimal)row["Score"],
+                AttemptDate = (DateTime)row["AttemptDate"],
+                IsPassed = (bool)row["IsPassed"]
+            };
+        }
+
         public DataTable GetResultsByUserId(int userId)
         {
             const string sql = "SELECT q.QuizTitle, r.Score, r.AttemptDate, r.IsPassed, m.ModuleTitle " +

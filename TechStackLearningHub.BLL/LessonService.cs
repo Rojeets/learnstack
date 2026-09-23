@@ -8,6 +8,8 @@ namespace TechStackLearningHub.BLL
     public class LessonService
     {
         private readonly LessonRepository _lessonRepository = new LessonRepository();
+        private readonly ModuleRepository _moduleRepository = new ModuleRepository();
+        private readonly CourseRepository _courseRepository = new CourseRepository();
         private readonly ProgressRepository _progressRepository = new ProgressRepository();
 
         // Only embeddable player URLs render inside an <iframe>; a full watch
@@ -24,6 +26,22 @@ namespace TechStackLearningHub.BLL
         public Lesson GetLessonDetail(int lessonId)
         {
             return _lessonRepository.GetLessonById(lessonId);
+        }
+
+        public int GetCourseIdForLesson(int lessonId)
+        {
+            Lesson lesson = _lessonRepository.GetLessonById(lessonId);
+            if (lesson == null) return 0;
+            DAL.Models.Module module = _moduleRepository.GetModuleById(lesson.ModuleID);
+            return module == null ? 0 : module.CourseID;
+        }
+
+        public bool IsLessonInPublishedCourse(int lessonId)
+        {
+            int courseId = GetCourseIdForLesson(lessonId);
+            if (courseId <= 0) return false;
+            Course course = _courseRepository.GetCourseById(courseId);
+            return course != null && course.IsPublished;
         }
 
         public int AddLessonToModule(Lesson lesson)

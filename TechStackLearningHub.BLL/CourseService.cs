@@ -42,6 +42,16 @@ namespace TechStackLearningHub.BLL
             return _courseRepository.GetCourseById(courseId);
         }
 
+        // Student-facing lookup: null unless the course is published, so a
+        // hand-typed URL can never open a draft course.
+        public Course GetPublishedCourse(int courseId)
+        {
+            Course course = _courseRepository.GetCourseById(courseId);
+            if (course == null || !course.IsPublished)
+                return null;
+            return course;
+        }
+
         public int CreateCourse(Course course)
         {
             ValidateCourse(course);

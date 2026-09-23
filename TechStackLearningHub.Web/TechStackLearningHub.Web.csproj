@@ -117,6 +117,15 @@
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Default.aspx" />
+    <Content Include="Login.aspx" />
+    <Content Include="Register.aspx" />
+    <Content Include="Student\Dashboard.aspx" />
+    <Content Include="Student\CourseCatalog.aspx" />
+    <Content Include="Student\CourseDetails.aspx" />
+    <Content Include="Student\LessonViewer.aspx" />
+    <Content Include="Student\QuizPage.aspx" />
+    <Content Include="Student\ResultsHistory.aspx" />
+    <Content Include="Student\ProgressDashboard.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -188,6 +197,20 @@
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Register.aspx.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Register.aspx.designer.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -198,6 +221,55 @@
     </Compile>
     <Compile Include="Site.Master.designer.cs">
       <DependentUpon>Site.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Student\Dashboard.aspx.cs">
+      <DependentUpon>Dashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\Dashboard.aspx.designer.cs">
+      <DependentUpon>Dashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student\CourseCatalog.aspx.cs">
+      <DependentUpon>CourseCatalog.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\CourseCatalog.aspx.designer.cs">
+      <DependentUpon>CourseCatalog.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student\CourseDetails.aspx.cs">
+      <DependentUpon>CourseDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\CourseDetails.aspx.designer.cs">
+      <DependentUpon>CourseDetails.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student\LessonViewer.aspx.cs">
+      <DependentUpon>LessonViewer.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\LessonViewer.aspx.designer.cs">
+      <DependentUpon>LessonViewer.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student\QuizPage.aspx.cs">
+      <DependentUpon>QuizPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\QuizPage.aspx.designer.cs">
+      <DependentUpon>QuizPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student\ResultsHistory.aspx.cs">
+      <DependentUpon>ResultsHistory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\ResultsHistory.aspx.designer.cs">
+      <DependentUpon>ResultsHistory.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student\ProgressDashboard.aspx.cs">
+      <DependentUpon>ProgressDashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student\ProgressDashboard.aspx.designer.cs">
+      <DependentUpon>ProgressDashboard.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -218,6 +290,10 @@
     <ProjectReference Include="..\TechStackLearningHub.BLL\TechStackLearningHub.BLL.csproj">
       <Project>{31ceceba-4035-4822-8eef-07ff565a7a0e}</Project>
       <Name>TechStackLearningHub.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TechStackLearningHub.DAL\TechStackLearningHub.DAL.csproj">
+      <Project>{cc61d4e8-8e3c-483e-91ca-06c5e95cc35e}</Project>
+      <Name>TechStackLearningHub.DAL</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

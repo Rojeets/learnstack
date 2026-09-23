@@ -40,6 +40,33 @@ namespace TechStackLearningHub.BLL
         private readonly ResultRepository _resultRepository = new ResultRepository();
         private readonly ProgressRepository _progressRepository = new ProgressRepository();
         private readonly LessonRepository _lessonRepository = new LessonRepository();
+        private readonly ModuleRepository _moduleRepository = new ModuleRepository();
+        private readonly CourseRepository _courseRepository = new CourseRepository();
+
+        // Student-facing entry point: returns the quiz only when its module
+        // belongs to a published course, so a hand-typed ModuleID can never
+        // expose a draft course's quiz.
+        public QuizForStudent GetQuizForStudentIfPublished(int moduleId)
+        {
+            if (!IsModuleInPublishedCourse(moduleId))
+                return null;
+            return GetQuizForStudent(moduleId);
+        }
+
+        public bool IsModuleInPublishedCourse(int moduleId)
+        {
+            Quiz quiz = _quizRepository.GetQuizByModuleId(moduleId);
+            if (quiz == null) return false;
+            DAL.Models.Module module = _moduleRepository.GetModuleById(moduleId);
+            if (module == null) return false;
+            Course course = _courseRepository.GetCourseById(module.CourseID);
+            return course != null && course.IsPublished;
+        }
+
+        public Quiz GetQuizForModuleId(int moduleId)
+        {
+            return _quizRepository.GetQuizByModuleId(moduleId);
+        }
 
         public QuizForStudent GetQuizForStudent(int moduleId)
         {
@@ -83,6 +110,11 @@ namespace TechStackLearningHub.BLL
         {
             if (selectedAnswerIdsByQuestionId == null)
                 selectedAnswerIdsByQuestionId = new Dictionary<int, List<int>>();
+
+            // Server-side retake guard: even if a kept quiz postback is replayed,
+            // a passed quiz can never be submitted again.
+            if (HasPassedQuiz(userId, quizId))
+                throw new InvalidOperationException("This quiz has already been passed and cannot be retaken.");
 
             Result result = null;
             // The Results insert and the Progress updates must be atomic: a
@@ -145,6 +177,19 @@ namespace TechStackLearningHub.BLL
         public DataTable GetQuizHistoryForUser(int userId)
         {
             return _resultRepository.GetResultsByUserId(userId);
+        }
+
+        // A quiz may only ever be taken to pass once; a passed attempt locks it.
+        public bool HasPassedQuiz(int userId, int quizId)
+        {
+            Result latest = _resultRepository.GetLatestResultByUserAndQuiz(userId, quizId);
+            return latest != null && latest.IsPassed;
+        }
+
+        public int GetModuleCourseId(int moduleId)
+        {
+            DAL.Models.Module module = _moduleRepository.GetModuleById(moduleId);
+            return module == null ? 0 : module.CourseID;
         }
     }
 }
