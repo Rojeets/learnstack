@@ -1,3 +1,4 @@
+using System;
 using System.Data;
 using TechStackLearningHub.DAL;
 using TechStackLearningHub.DAL.Models;
@@ -28,10 +29,16 @@ namespace TechStackLearningHub.BLL
             }
             if (!string.IsNullOrEmpty(techStackFilter))
             {
-                DataRow[] filtered = courses.Select("TechStack = '" + techStackFilter.Replace("'", "''") + "'");
+                // Filter the in-memory table with an ordinal comparison rather
+                // than a DataTable.Select row-filter string, so the value never
+                // participates in filter/sort-expression syntax.
                 DataTable result = courses.Clone();
-                foreach (DataRow row in filtered)
-                    result.ImportRow(row);
+                foreach (DataRow row in courses.Rows)
+                {
+                    if (string.Equals(Convert.ToString(row["TechStack"]), techStackFilter,
+                        System.StringComparison.OrdinalIgnoreCase))
+                        result.ImportRow(row);
+                }
                 return result;
             }
             return courses;

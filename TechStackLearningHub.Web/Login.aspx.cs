@@ -1,4 +1,5 @@
 using System;
+using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using TechStackLearningHub.BLL;
@@ -9,11 +10,22 @@ namespace TechStackLearningHub.Web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (IsPostBack)
+                return;
+
             string roleName = Session["RoleName"] as string;
             if (!string.IsNullOrEmpty(roleName))
             {
                 RedirectToRoleDashboard(roleName);
+                return;
             }
+
+            // A valid Forms auth ticket with no matching session (e.g. the
+            // session was recycled after a timeout) would otherwise bounce
+            // between this page and the role dashboards forever. Drop the stale
+            // ticket and show the login form again.
+            if (Request.IsAuthenticated)
+                FormsAuthentication.SignOut();
         }
 
         protected void btnLogin_Click(object sender, EventArgs e)

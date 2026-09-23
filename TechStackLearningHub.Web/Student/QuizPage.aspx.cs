@@ -36,9 +36,6 @@ namespace TechStackLearningHub.Web.Student
                 return;
             }
 
-            if (IsPostBack)
-                return;
-
             LoadQuiz();
         }
 
@@ -136,6 +133,14 @@ namespace TechStackLearningHub.Web.Student
             }
 
             int userId = (int)Session["UserID"];
+
+            if (_quizService.HasPassedQuiz(userId, _quiz.QuizID))
+            {
+                pnlQuiz.Visible = false;
+                pnlRetake.Visible = true;
+                return;
+            }
+
             Result result = _quizService.SubmitQuizAttempt(userId, _quiz.QuizID, selections);
 
             ShowResult(result);

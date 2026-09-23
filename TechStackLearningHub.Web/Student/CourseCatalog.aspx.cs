@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using TechStackLearningHub.BLL;
@@ -38,7 +39,9 @@ namespace TechStackLearningHub.Web.Student
         private void BindCourses()
         {
             string filter = ddlTechStackFilter.SelectedValue;
-            rptCourses.DataSource = _courseService.GetCatalogueForStudents(filter);
+            DataTable courses = _courseService.GetCatalogueForStudents(filter);
+            pnlEmpty.Visible = courses.Rows.Count == 0;
+            rptCourses.DataSource = courses;
             rptCourses.DataBind();
         }
     }

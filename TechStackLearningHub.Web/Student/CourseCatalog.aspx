@@ -23,8 +23,8 @@
                 </div>
             </div>
         </ItemTemplate>
-        <EmptyDataTemplate>
-            <div class="alert alert-info">No published courses for this stack yet.</div>
-        </EmptyDataTemplate>
-    </asp:Repeater>
+        </asp:Repeater>
+    <asp:Panel ID="pnlEmpty" runat="server" CssClass="alert alert-info" Visible="false">
+        No published courses for this stack yet.
+    </asp:Panel>
 </asp:Content>

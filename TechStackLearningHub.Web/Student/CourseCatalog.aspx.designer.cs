@@ -23,5 +23,10 @@ namespace TechStackLearningHub.Web.Student
         /// rptCourses control.
         /// </summary>
         protected global::System.Web.UI.WebControls.Repeater rptCourses;
+
+        /// <summary>
+        /// pnlEmpty control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Panel pnlEmpty;
     }
 }

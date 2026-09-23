@@ -19,8 +19,8 @@
                 </div>
             </div>
         </ItemTemplate>
-        <EmptyDataTemplate>
-            <div class="alert alert-info">You have not started any courses yet. <a href="CourseCatalog.aspx">Browse the catalogue</a>.</div>
-        </EmptyDataTemplate>
-    </asp:Repeater>
+        </asp:Repeater>
+    <asp:Panel ID="pnlEmpty" runat="server" CssClass="alert alert-info" Visible="false">
+        You have not started any courses yet. <a href="CourseCatalog.aspx">Browse the catalogue</a>.
+    </asp:Panel>
 </asp:Content>

@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using TechStackLearningHub.BLL;
@@ -20,7 +21,9 @@ namespace TechStackLearningHub.Web.Student
             if (!IsPostBack)
             {
                 int userId = (int)Session["UserID"];
-                rptCourses.DataSource = new ProgressService().GetAllCoursesProgressForUser(userId);
+                DataTable progress = new ProgressService().GetAllCoursesProgressForUser(userId);
+                pnlEmpty.Visible = progress.Rows.Count == 0;
+                rptCourses.DataSource = progress;
                 rptCourses.DataBind();
             }
         }

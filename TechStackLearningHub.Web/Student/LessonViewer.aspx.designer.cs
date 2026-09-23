@@ -42,7 +42,7 @@ namespace TechStackLearningHub.Web.Student
         /// <summary>
         /// frmVideo control.
         /// </summary>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl frmVideo;
+        protected global::System.Web.UI.HtmlControls.HtmlIframe frmVideo;
 
         /// <summary>
         /// hlDownloadNotes control.
