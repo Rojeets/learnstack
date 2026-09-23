@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace learnstack
+namespace TechStackLearningHub.Web
 {
 
 
@@ -15,21 +15,38 @@ namespace learnstack
     {
 
         /// <summary>
-        /// HeadContent control.
+        /// pnlAnonymous control.
         /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder HeadContent;
+        protected global::System.Web.UI.WebControls.Panel pnlAnonymous;
+
+        /// <summary>
+        /// pnlStudent control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Panel pnlStudent;
+
+        /// <summary>
+        /// pnlAdmin control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Panel pnlAdmin;
+
+        /// <summary>
+        /// pnlAuthenticated control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Panel pnlAuthenticated;
+
+        /// <summary>
+        /// litUser control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litUser;
+
+        /// <summary>
+        /// btnLogout control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.LinkButton btnLogout;
 
         /// <summary>
         /// MainContent control.
         /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
         protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
     }
 }

@@ -1,5 +1,5 @@
 <Solution>
-  <Project Path="TechStackLearningHub.Web/TechStackLearningHub.Web.csproj" />
-  <Project Path="TechStackLearningHub.BLL/TechStackLearningHub.BLL.csproj" />
-  <Project Path="TechStackLearningHub.DAL/TechStackLearningHub.DAL.csproj" />
+  <Project Path="TechStackLearningHub.Web/TechStackLearningHub.Web.csproj" Id="1a49f434-dfcc-4bb3-975c-c4464f5ce35f" />
+  <Project Path="TechStackLearningHub.BLL/TechStackLearningHub.BLL.csproj" Id="31ceceba-4035-4822-8eef-07ff565a7a0e" />
+  <Project Path="TechStackLearningHub.DAL/TechStackLearningHub.DAL.csproj" Id="cc61d4e8-8e3c-483e-91ca-06c5e95cc35e" />
 </Solution>
