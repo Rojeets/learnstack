@@ -1,3 +1,5 @@
 <Solution>
-  <Project Path="learnstack/learnstack.csproj" />
+  <Project Path="TechStackLearningHub.Web/TechStackLearningHub.Web.csproj" />
+  <Project Path="TechStackLearningHub.BLL/TechStackLearningHub.BLL.csproj" />
+  <Project Path="TechStackLearningHub.DAL/TechStackLearningHub.DAL.csproj" />
 </Solution>
