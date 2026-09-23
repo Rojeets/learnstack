@@ -1,0 +1,29 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.slnx.cache
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+*.Publish.xml
+*.pubxml
+
+# NuGet
+packages/
+*.nupkg
+project.lock.json
+packages-lock.json
+
+# Deployment / runtime data
+App_Data/*.mdf
+App_Data/*.ldf
+UploadedNotes/
+
+# Logs
+*.log
