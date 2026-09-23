@@ -55,6 +55,13 @@ namespace TechStackLearningHub.DAL
             DbHelper.ExecuteNonQuery(sql, parameters);
         }
 
+        public string GetRoleNameById(int roleId)
+        {
+            const string sql = "SELECT RoleName FROM Roles WHERE RoleID = @RoleId";
+            object value = DbHelper.ExecuteScalar(sql, new SqlParameter[] { new SqlParameter("@RoleId", roleId) });
+            return value == null ? null : value.ToString();
+        }
+
         public int GetRoleIdByName(string roleName)
         {
             const string sql = "SELECT RoleID FROM Roles WHERE RoleName = @RoleName";

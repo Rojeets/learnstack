@@ -50,6 +50,12 @@ namespace TechStackLearningHub.DAL
             DbHelper.ExecuteNonQuery(sql, new SqlParameter[] { new SqlParameter("@AnswerId", answerId) });
         }
 
+        public void DeleteAnswersByQuestionId(int questionId)
+        {
+            const string sql = "DELETE FROM Answers WHERE QuestionID = @QuestionId";
+            DbHelper.ExecuteNonQuery(sql, new SqlParameter[] { new SqlParameter("@QuestionId", questionId) });
+        }
+
         private Answer MapRow(DataRow row)
         {
             return new Answer

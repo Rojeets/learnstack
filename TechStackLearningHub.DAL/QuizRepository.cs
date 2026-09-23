@@ -6,6 +6,14 @@ namespace TechStackLearningHub.DAL
 {
     public class QuizRepository
     {
+        public Quiz GetQuizById(int quizId)
+        {
+            const string sql = "SELECT * FROM Quiz WHERE QuizID = @QuizId";
+            DataTable table = DbHelper.ExecuteQuery(sql, new SqlParameter[] { new SqlParameter("@QuizId", quizId) });
+            if (table.Rows.Count == 0) return null;
+            return MapRow(table.Rows[0]);
+        }
+
         public Quiz GetQuizByModuleId(int moduleId)
         {
             const string sql = "SELECT * FROM Quiz WHERE ModuleID = @ModuleId";
