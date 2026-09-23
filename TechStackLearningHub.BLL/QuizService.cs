@@ -191,5 +191,58 @@ namespace TechStackLearningHub.BLL
             DAL.Models.Module module = _moduleRepository.GetModuleById(moduleId);
             return module == null ? 0 : module.CourseID;
         }
+
+        // ---- Admin quiz management -----------------------------------------
+
+        public DataTable GetAllQuizzesForAdmin()
+        {
+            return _quizRepository.GetAllQuizzesForAdmin();
+        }
+
+        public int CreateQuiz(int moduleId, string title, int passMarkPercent)
+        {
+            ValidateQuiz(title, passMarkPercent);
+            if (_quizRepository.GetQuizByModuleId(moduleId) != null)
+                throw new InvalidOperationException("This module already has a quiz.");
+            return _quizRepository.InsertQuiz(new Quiz
+            {
+                ModuleID = moduleId,
+                QuizTitle = title,
+                PassMarkPercent = passMarkPercent
+            });
+        }
+
+        public void UpdateQuiz(int quizId, string title, int passMarkPercent)
+        {
+            ValidateQuiz(title, passMarkPercent);
+            _quizRepository.UpdateQuiz(new Quiz
+            {
+                QuizID = quizId,
+                ModuleID = 0,
+                QuizTitle = title,
+                PassMarkPercent = passMarkPercent
+            });
+        }
+
+        public void DeleteQuiz(int quizId)
+        {
+            if (_resultRepository.GetAttemptCountByQuizId(quizId) > 0)
+                throw new InvalidOperationException("This quiz already has attempts and cannot be deleted.");
+
+            foreach (var question in _questionRepository.GetQuestionsByQuizId(quizId))
+            {
+                _answerRepository.DeleteAnswersByQuestionId(question.QuestionID);
+                _questionRepository.DeleteQuestion(question.QuestionID);
+            }
+            _quizRepository.DeleteQuiz(quizId);
+        }
+
+        private void ValidateQuiz(string title, int passMarkPercent)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+                throw new InvalidOperationException("Quiz title is required.");
+            if (passMarkPercent < 0 || passMarkPercent > 100)
+                throw new InvalidOperationException("Pass mark must be between 0 and 100.");
+        }
     }
 }

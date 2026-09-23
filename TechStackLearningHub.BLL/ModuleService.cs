@@ -14,6 +14,11 @@ namespace TechStackLearningHub.BLL
             return _moduleRepository.GetModulesByCourseId(courseId);
         }
 
+        public DAL.Models.Module GetModuleById(int moduleId)
+        {
+            return _moduleRepository.GetModuleById(moduleId);
+        }
+
         public int AddModuleToCourse(int courseId, string title)
         {
             DataTable existing = _moduleRepository.GetModulesByCourseId(courseId);

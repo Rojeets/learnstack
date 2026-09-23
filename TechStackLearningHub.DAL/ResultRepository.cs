@@ -99,5 +99,11 @@ namespace TechStackLearningHub.DAL
             const string sql = "SELECT COUNT(*) FROM Results WHERE AttemptDate >= @Since";
             return (int)DbHelper.ExecuteScalar(sql, new SqlParameter[] { new SqlParameter("@Since", since) });
         }
+
+        public int GetAttemptCountByQuizId(int quizId)
+        {
+            const string sql = "SELECT COUNT(*) FROM Results WHERE QuizID = @QuizId";
+            return (int)DbHelper.ExecuteScalar(sql, new SqlParameter[] { new SqlParameter("@QuizId", quizId) });
+        }
     }
 }

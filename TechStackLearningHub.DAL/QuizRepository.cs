@@ -22,6 +22,17 @@ namespace TechStackLearningHub.DAL
             return MapRow(table.Rows[0]);
         }
 
+        // Admin quiz picker across every course, not just one module.
+        public DataTable GetAllQuizzesForAdmin()
+        {
+            const string sql = "SELECT q.QuizID, q.QuizTitle, q.PassMarkPercent, m.ModuleTitle, c.CourseName " +
+                               "FROM Quiz q " +
+                               "JOIN Modules m ON m.ModuleID = q.ModuleID " +
+                               "JOIN Courses c ON c.CourseID = m.CourseID " +
+                               "ORDER BY c.CourseName, m.ModuleTitle";
+            return DbHelper.ExecuteQuery(sql, null);
+        }
+
         public int InsertQuiz(Quiz quiz)
         {
             const string sql = "INSERT INTO Quiz (ModuleID, QuizTitle, PassMarkPercent) " +

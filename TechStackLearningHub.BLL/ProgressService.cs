@@ -21,5 +21,10 @@ namespace TechStackLearningHub.BLL
         {
             return _progressRepository.GetCourseProgressSummariesForUser(userId);
         }
+
+        public DataTable GetProgressSummariesForReporting(int courseId)
+        {
+            return _progressRepository.GetProgressSummariesForReporting(courseId);
+        }
     }
 }

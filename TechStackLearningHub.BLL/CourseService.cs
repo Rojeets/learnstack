@@ -72,6 +72,16 @@ namespace TechStackLearningHub.BLL
             _courseRepository.SetPublishStatus(courseId, true);
         }
 
+        public void UnpublishCourse(int courseId)
+        {
+            _courseRepository.SetPublishStatus(courseId, false);
+        }
+
+        public DataTable GetAllCoursesForAdmin()
+        {
+            return _courseRepository.GetAllCoursesForAdmin();
+        }
+
         public void DeleteCourse(int courseId)
         {
             _courseRepository.DeleteCourse(courseId);

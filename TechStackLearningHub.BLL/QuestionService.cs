@@ -14,6 +14,11 @@ namespace TechStackLearningHub.BLL
             return _questionRepository.GetQuestionsByQuizId(quizId);
         }
 
+        public List<Answer> GetAnswerOptions(int questionId)
+        {
+            return _answerRepository.GetAnswersByQuestionId(questionId);
+        }
+
         public int AddQuestionToQuiz(int quizId, string text, int marks, List<AnswerInput> answers)
         {
             RequireAtLeastOneCorrect(answers);
