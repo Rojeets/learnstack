@@ -55,6 +55,21 @@ namespace TechStackLearningHub.Web.Member
         protected global::System.Web.UI.WebControls.Button btnMarkComplete;
 
         /// <summary>
+        /// pnlCompleted control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Panel pnlCompleted;
+
+        /// <summary>
+        /// lnkPrevLesson control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.HyperLink lnkPrevLesson;
+
+        /// <summary>
+        /// lnkNextLesson control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.HyperLink lnkNextLesson;
+
+        /// <summary>
         /// pnlNotFound control.
         /// </summary>
         protected global::System.Web.UI.WebControls.Panel pnlNotFound;

@@ -11,8 +11,11 @@
     <link href="<%= ResolveUrl("~/favicon.ico") %>" rel="shortcut icon" type="image/x-icon" />
 </head>
 <body>
+    <%-- First tab stop: lets keyboard users step past the nav straight to the
+         page content instead of tabbing every link. --%>
+    <a class="visually-hidden-focusable skip-link" href="#mainContent">Skip to main content</a>
     <form runat="server">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Main">
             <div class="container-fluid">
                 <a class="navbar-brand fw-bold" href="<%= ResolveUrl("~/Pages/Default.aspx") %>">TechStack Learning Hub</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,14 +52,21 @@
         </nav>
 
         <div class="container body-content py-4">
-            <asp:ContentPlaceHolder ID="MainContent" runat="server">
-            </asp:ContentPlaceHolder>
+            <main id="mainContent" tabindex="-1">
+                <asp:ContentPlaceHolder ID="MainContent" runat="server">
+                </asp:ContentPlaceHolder>
+            </main>
             <hr />
             <footer class="text-muted">
                 <p>&copy; <%: DateTime.Now.Year %> - TechStack Learning Hub</p>
             </footer>
         </div>
     </form>
+    <%-- WebForms.js defines WebForm_DoPostBackWithOptions, which the Web Forms
+         runtime emits for controls that need postback options (for example the
+         LinkButtons in the module, quiz and question grids). Without this the
+         helper is undefined and those buttons silently do nothing. --%>
+    <script src="<%= ResolveUrl("~/bundles/WebFormsJs") %>"></script>
     <script src="<%= ResolveUrl("~/Scripts/bootstrap.bundle.min.js") %>"></script>
 </body>
 </html>

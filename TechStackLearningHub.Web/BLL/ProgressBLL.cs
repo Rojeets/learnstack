@@ -13,6 +13,11 @@ namespace TechStackLearningHub.Web.BLL
             _progressDAL.MarkLessonComplete(userId, lessonId);
         }
 
+        public bool IsLessonComplete(int userId, int lessonId)
+        {
+            return _progressDAL.IsLessonComplete(userId, lessonId);
+        }
+
         public decimal GetCourseProgressSummary(int userId, int courseId)
         {
             return _progressDAL.GetCourseCompletionPercentage(userId, courseId);

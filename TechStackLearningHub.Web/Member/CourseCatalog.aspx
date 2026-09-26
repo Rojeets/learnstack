@@ -4,7 +4,7 @@
     <h1>Course Catalogue</h1>
     <div class="row mb-4">
         <div class="col-md-4">
-            <label class="form-label" for="ddlTechStackFilter">Filter by tech stack</label>
+            <asp:Label runat="server" AssociatedControlID="ddlTechStackFilter" CssClass="form-label" Text="Filter by tech stack" />
             <asp:DropDownList ID="ddlTechStackFilter" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddlTechStackFilter_SelectedIndexChanged" />
         </div>
     </div>
@@ -14,7 +14,7 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
-                        <h5 class="card-title"><%# Eval("CourseName") %></h5>
+                        <h2 class="h5 card-title"><%# Eval("CourseName") %></h2>
                         <span class="badge bg-primary"><%# Eval("TechStack") %></span>
                     </div>
                     <p class="card-text"><%# Eval("Description") %></p>

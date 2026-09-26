@@ -108,6 +108,40 @@ namespace TechStackLearningHub.Web.BLL
             return _courseDAL.GetPublishedCourseCount();
         }
 
+        /// <summary>
+        /// Courses per tech stack for the admin dashboard bars, with
+        /// PercentOfMax filled in.
+        /// </summary>
+        public List<TechStackCourseCount> GetCourseCountsByTechStack()
+        {
+            List<TechStackCourseCount> counts = _courseDAL.SelectCourseCountsByTechStack();
+            if (counts.Count == 0)
+                return counts;
+
+            // The bar width is relative to the biggest stack, not to the total.
+            // Dividing by the total would give the widest bar a value near 100
+            // only when one stack holds nearly everything; in a realistic
+            // spread every bar would shrink to a few percent and the chart
+            // would lose the comparison it exists to make. Normalising to the
+            // max also means the widest bar is always full width, whatever the
+            // absolute numbers are.
+            int max = 0;
+            foreach (TechStackCourseCount row in counts)
+            {
+                if (row.CourseCount > max)
+                    max = row.CourseCount;
+            }
+
+            if (max == 0)
+                return counts;
+
+            foreach (TechStackCourseCount row in counts)
+            {
+                row.PercentOfMax = (decimal)row.CourseCount * 100m / max;
+            }
+            return counts;
+        }
+
         private void ValidateCourse(Course course)
         {
             if (course == null)

@@ -5,6 +5,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using TechStackLearningHub.Web.BLL;
 using TechStackLearningHub.Web.Helpers;
+using TechStackLearningHub.Web.Masterpages;
 using TechStackLearningHub.Web.Models;
 
 namespace TechStackLearningHub.Web.Admin
@@ -16,6 +17,13 @@ namespace TechStackLearningHub.Web.Admin
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Set before the IsPostBack guard: the master renders the topbar
+            // title in Master.Load, i.e. after this handler, and this page
+            // auto-posts back whenever the course dropdown changes, so
+            // guarding these calls would blank the title on each change.
+            var master = (AdminMaster)Master;
+            master.SetPageTitle("Manage Modules");
+            master.SetActiveNav("ManageModules.aspx");
 
             if (!IsPostBack)
             {
@@ -47,6 +55,7 @@ namespace TechStackLearningHub.Web.Admin
         {
             pnlRename.Visible = false;
             LoadWorkspace();
+            UrlSync.Sync(this, "CourseID", ddlCourse.SelectedValue);
         }
 
         private int CurrentCourseId
@@ -77,10 +86,11 @@ namespace TechStackLearningHub.Web.Admin
 
             try
             {
-                _moduleBLL.AddModuleToCourse(CurrentCourseId, txtModuleTitle.Text.Trim());
+                string added = txtModuleTitle.Text.Trim();
+                _moduleBLL.AddModuleToCourse(CurrentCourseId, added);
                 txtModuleTitle.Text = "";
-                ClearMessage();
                 LoadWorkspace();
+                ShowSuccess("Added \"" + added + "\".");
             }
             catch (Exception ex)
             {
@@ -104,18 +114,26 @@ namespace TechStackLearningHub.Web.Admin
                         BeginRename(moduleId);
                         break;
                     case "DeleteModule":
+                        Module removed = _moduleBLL.GetModuleById(moduleId);
                         _moduleBLL.DeleteModule(moduleId);
                         pnlRename.Visible = false;
+                        ShowSuccess("Deleted \"" + (removed == null ? "the module" : removed.ModuleTitle) + "\".");
                         break;
                     case "ManageLessons":
-                        Response.Redirect("ManageLessons.aspx?ModuleID=" + moduleId);
+                        // Carry the course as well as the module so the target URL
+                        // is complete and shareable. ManageLessons can resolve a
+                        // bare ModuleID on its own, but sending the parent id
+                        // keeps the whole cascade self-describing in the address
+                        // bar and in a bookmark.
+                        Response.Redirect("ManageLessons.aspx?CourseID="
+                            + CurrentCourseId + "&ModuleID=" + moduleId);
                         break;
                     case "MoveUp":
                     case "MoveDown":
-                        Reorder(moduleId, e.CommandName == "MoveUp");
+                        if (Reorder(moduleId, e.CommandName == "MoveUp"))
+                            ShowSuccess(e.CommandName == "MoveUp" ? "Moved the module up." : "Moved the module down.");
                         break;
                 }
-                ClearMessage();
                 LoadWorkspace();
             }
             catch (ThreadAbortException)
@@ -148,10 +166,11 @@ namespace TechStackLearningHub.Web.Admin
                 int moduleId;
                 if (int.TryParse(hidRenameModuleId.Value, out moduleId) && moduleId > 0)
                 {
-                    _moduleBLL.RenameModule(moduleId, txtRenameTitle.Text.Trim());
+                    string renamed = txtRenameTitle.Text.Trim();
+                    _moduleBLL.RenameModule(moduleId, renamed);
                     pnlRename.Visible = false;
-                    ClearMessage();
                     LoadWorkspace();
+                    ShowSuccess("Renamed the module to \"" + renamed + "\".");
                 }
             }
             catch (Exception ex)
@@ -165,7 +184,7 @@ namespace TechStackLearningHub.Web.Admin
             pnlRename.Visible = false;
         }
 
-        private void Reorder(int moduleId, bool moveUp)
+        private bool Reorder(int moduleId, bool moveUp)
         {
             List<Module> modules = _moduleBLL.GetModulesForCourse(CurrentCourseId);
             var ordered = new List<int>();
@@ -175,16 +194,17 @@ namespace TechStackLearningHub.Web.Admin
             int index = ordered.IndexOf(moduleId);
             int target = moveUp ? index - 1 : index + 1;
             if (index < 0 || target < 0 || target >= ordered.Count)
-                return;
+                return false;
 
             ordered.RemoveAt(index);
             ordered.Insert(target, moduleId);
             _moduleBLL.ReorderModules(ordered);
+            return true;
         }
 
-        private void ClearMessage()
+        private void ShowSuccess(string message)
         {
-            lblMessage.Visible = false;
+            AdminUi.Success(lblMessage, lblSuccess, message);
         }
 
         // Single place that decides what the admin is allowed to read. A
@@ -193,17 +213,7 @@ namespace TechStackLearningHub.Web.Admin
         // string or SQL, so it is logged and replaced.
         private void ShowError(Exception ex)
         {
-            var validation = ex as ValidationException;
-            if (validation != null)
-            {
-                lblMessage.Text = System.Web.HttpUtility.HtmlEncode(validation.Message);
-            }
-            else
-            {
-                ErrorLogger.Log(ex, "ManageModules");
-                lblMessage.Text = "The module could not be saved. Please try again.";
-            }
-            lblMessage.Visible = true;
+            AdminUi.Error(lblMessage, lblSuccess, ex, "The module could not be saved. Please try again.", "ManageModules");
         }
     }
 }

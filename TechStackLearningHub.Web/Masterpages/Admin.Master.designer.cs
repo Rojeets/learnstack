@@ -15,6 +15,51 @@ namespace TechStackLearningHub.Web.Masterpages
     {
 
         /// <summary>
+        /// litPageTitle control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litPageTitle;
+
+        /// <summary>
+        /// navDashboard control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.HyperLink navDashboard;
+
+        /// <summary>
+        /// navCourses control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.HyperLink navCourses;
+
+        /// <summary>
+        /// navModules control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.HyperLink navModules;
+
+        /// <summary>
+        /// navLessons control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.HyperLink navLessons;
+
+        /// <summary>
+        /// navQuizzes control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.HyperLink navQuizzes;
+
+        /// <summary>
+        /// navQuestions control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.HyperLink navQuestions;
+
+        /// <summary>
+        /// navUsers control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.HyperLink navUsers;
+
+        /// <summary>
+        /// navReports control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.HyperLink navReports;
+
+        /// <summary>
         /// litAdminName control.
         /// </summary>
         protected global::System.Web.UI.WebControls.Literal litAdminName;

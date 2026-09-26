@@ -30,6 +30,11 @@ namespace TechStackLearningHub.Web.Admin
         protected global::System.Web.UI.WebControls.Panel pnlWorkspace;
 
         /// <summary>
+        /// grdQuizzes control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.GridView grdQuizzes;
+
+        /// <summary>
         /// litHeading control.
         /// </summary>
         protected global::System.Web.UI.WebControls.Literal litHeading;
@@ -55,14 +60,29 @@ namespace TechStackLearningHub.Web.Admin
         protected global::System.Web.UI.WebControls.TextBox txtPassMark;
 
         /// <summary>
+        /// txtDurationMinutes control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.TextBox txtDurationMinutes;
+
+        /// <summary>
         /// lblMessage control.
         /// </summary>
         protected global::System.Web.UI.WebControls.Label lblMessage;
 
         /// <summary>
+        /// lblSuccess control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Label lblSuccess;
+
+        /// <summary>
         /// btnSaveQuiz control.
         /// </summary>
         protected global::System.Web.UI.WebControls.Button btnSaveQuiz;
+
+        /// <summary>
+        /// btnCancelEdit control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Button btnCancelEdit;
 
         /// <summary>
         /// btnDeleteQuiz control.

@@ -6,11 +6,88 @@
     padding-right: 15px;
 }
 
-/* Set widths on the form inputs since otherwise they're 100% wide */
-input,
-select,
-textarea {
-    max-width: 280px;
+/* "Skip to main content" is the first tab stop. Bootstrap's
+   visually-hidden-focusable keeps it out of the way until it is focused, but
+   on the dark navbar it then needs its own contrast and placement. */
+.skip-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1080;
+    margin: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background-color: #fff;
+    color: #212529;
+    border: 2px solid #212529;
+    border-radius: 0.25rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* The skip target is a tabindex="-1" region, so it must not draw a focus ring
+   when clicked but should still be reachable by keyboard. */
+#mainContent:focus {
+    outline: none;
+}
+
+/* Bootstrap's .form-control and .form-select are already width: 100%, so form
+   fields fill their column. A previous blanket max-width here capped every
+   field at 280px, which squeezed the lesson HTML editor and the notes upload
+   into a narrow strip. Fields that are genuinely short opt in instead. */
+.form-control-narrow {
+    max-width: 12rem;
+}
+
+/* Numeric pager rendered below the paged grids. GridView puts the class on the
+   pager row and nests a plain table of anchors inside it, so both the inherited
+   .table borders and the inner table's own borders have to be taken out. The
+   current page is a span rather than a link, and is filled in. */
+.grid-pager {
+    border: 0;
+}
+
+.grid-pager > td {
+    padding: 0.75rem 0.5rem 0.25rem;
+    border: 0;
+    text-align: left;
+}
+
+.grid-pager table {
+    margin: 0;
+    border: 0;
+    border-collapse: separate;
+    border-spacing: 0.15rem 0;
+}
+
+.grid-pager table td {
+    padding: 0;
+    border: 0;
+}
+
+.grid-pager a,
+.grid-pager span {
+    display: inline-block;
+    min-width: 2rem;
+    padding: 0.3rem 0.55rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    background-color: #fff;
+    color: #0d6efd;
+    text-align: center;
+    text-decoration: none;
+}
+
+.grid-pager a:hover,
+.grid-pager a:focus {
+    background-color: #e9ecef;
+    color: #0a58ca;
+}
+
+.grid-pager span {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+    font-weight: 600;
 }
 
 /* Responsive: Portrait tablets and up */

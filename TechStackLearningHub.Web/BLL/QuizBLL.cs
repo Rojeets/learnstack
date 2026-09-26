@@ -14,6 +14,15 @@ namespace TechStackLearningHub.Web.BLL
         public int QuizID { get; set; }
         public string QuizTitle { get; set; }
         public int PassMarkPercent { get; set; }
+
+        /// <summary>
+        /// The attempt's time limit in minutes, already resolved: a quiz with no
+        /// configured limit reports <see cref="QuizBLL.DefaultDurationMinutes"/>
+        /// rather than zero, so the client countdown is never handed a value
+        /// that would read as "already out of time".
+        /// </summary>
+        public int DurationMinutes { get; set; }
+
         public List<StudentQuestion> Questions { get; set; } = new List<StudentQuestion>();
     }
 
@@ -34,6 +43,13 @@ namespace TechStackLearningHub.Web.BLL
 
     public class QuizBLL
     {
+        /// <summary>
+        /// Time allowed for a quiz that has no configured limit. The client
+        /// timer used to hardcode 10 minutes; naming it here keeps the fallback
+        /// in one place so the page and the server agree.
+        /// </summary>
+        public const int DefaultDurationMinutes = 10;
+
         private readonly QuizDAL _quizDAL = new QuizDAL();
         private readonly QuestionDAL _questionDAL = new QuestionDAL();
         private readonly AnswerDAL _answerDAL = new AnswerDAL();
@@ -78,7 +94,8 @@ namespace TechStackLearningHub.Web.BLL
             {
                 QuizID = quiz.QuizID,
                 QuizTitle = quiz.QuizTitle,
-                PassMarkPercent = quiz.PassMarkPercent
+                PassMarkPercent = quiz.PassMarkPercent,
+                DurationMinutes = ResolveDurationMinutes(quiz.DurationMinutes)
             };
 
             foreach (Question q in _questionDAL.SelectByQuizId(quiz.QuizID))
@@ -206,22 +223,23 @@ namespace TechStackLearningHub.Web.BLL
             return _quizDAL.SelectAllForAdmin();
         }
 
-        public int CreateQuiz(int moduleId, string title, int passMarkPercent)
+        public int CreateQuiz(int moduleId, string title, int passMarkPercent, int durationMinutes)
         {
-            ValidateQuiz(title, passMarkPercent);
+            ValidateQuiz(title, passMarkPercent, durationMinutes);
             if (_quizDAL.SelectByModuleId(moduleId) != null)
                 throw new ValidationException("This module already has a quiz.");
             return _quizDAL.Insert(new Quiz
             {
                 ModuleID = moduleId,
                 QuizTitle = title,
-                PassMarkPercent = passMarkPercent
+                PassMarkPercent = passMarkPercent,
+                DurationMinutes = durationMinutes
             });
         }
 
-        public void UpdateQuiz(int quizId, string title, int passMarkPercent)
+        public void UpdateQuiz(int quizId, string title, int passMarkPercent, int durationMinutes)
         {
-            ValidateQuiz(title, passMarkPercent);
+            ValidateQuiz(title, passMarkPercent, durationMinutes);
             _quizDAL.Update(new Quiz
             {
                 QuizID = quizId,
@@ -229,7 +247,8 @@ namespace TechStackLearningHub.Web.BLL
                 // touch that column, so this placeholder never reaches the DB.
                 ModuleID = 0,
                 QuizTitle = title,
-                PassMarkPercent = passMarkPercent
+                PassMarkPercent = passMarkPercent,
+                DurationMinutes = durationMinutes
             });
         }
 
@@ -245,12 +264,32 @@ namespace TechStackLearningHub.Web.BLL
             _quizDAL.Delete(quizId);
         }
 
-        private void ValidateQuiz(string title, int passMarkPercent)
+        private void ValidateQuiz(string title, int passMarkPercent, int durationMinutes)
         {
             if (string.IsNullOrWhiteSpace(title))
                 throw new ValidationException("Quiz title is required.");
             if (passMarkPercent < 0 || passMarkPercent > 100)
                 throw new ValidationException("Pass mark must be between 0 and 100.");
+            if (durationMinutes < 1 || durationMinutes > MaxDurationMinutes)
+                throw new ValidationException(
+                    string.Format("Time limit must be between 1 and {0} minutes.", MaxDurationMinutes));
         }
+
+        /// <summary>
+        /// A NULL or out-of-range stored limit falls back to the default rather
+        /// than throwing, so a row written before the column existed still yields
+        /// a playable quiz instead of a broken page.
+        /// </summary>
+        public static int ResolveDurationMinutes(int? storedMinutes)
+        {
+            if (!storedMinutes.HasValue)
+                return DefaultDurationMinutes;
+            if (storedMinutes.Value < 1 || storedMinutes.Value > MaxDurationMinutes)
+                return DefaultDurationMinutes;
+            return storedMinutes.Value;
+        }
+
+        /// <summary>Upper bound for an authored time limit.</summary>
+        public const int MaxDurationMinutes = 240;
     }
 }

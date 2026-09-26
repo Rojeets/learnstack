@@ -17,7 +17,7 @@
         <div class="col-md-4">
             <div class="card h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Structured courses</h5>
+                    <h2 class="h5 card-title">Structured courses</h2>
                     <p class="card-text">Courses are split into ordered modules and lessons with embedded video and downloadable notes.</p>
                 </div>
             </div>
@@ -25,7 +25,7 @@
         <div class="col-md-4">
             <div class="card h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Quizzes with pass marks</h5>
+                    <h2 class="h5 card-title">Quizzes with pass marks</h2>
                     <p class="card-text">Each module ends with a weighted quiz. Scores count towards your progress dashboard and history.</p>
                 </div>
             </div>
@@ -33,7 +33,7 @@
         <div class="col-md-4">
             <div class="card h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Progress you can see</h5>
+                    <h2 class="h5 card-title">Progress you can see</h2>
                     <p class="card-text">Completion percentages update as you mark lessons complete and pass quizzes.</p>
                 </div>
             </div>

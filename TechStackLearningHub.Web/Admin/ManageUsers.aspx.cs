@@ -1,9 +1,10 @@
 using System;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using TechStackLearningHub.Web.BLL;
 using TechStackLearningHub.Web.Helpers;
+using TechStackLearningHub.Web.Masterpages;
+using TechStackLearningHub.Web.Models;
 
 namespace TechStackLearningHub.Web.Admin
 {
@@ -13,15 +14,30 @@ namespace TechStackLearningHub.Web.Admin
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            // The admin shell (topbar title, highlighted sidebar link) lives in
+            // Admin.Master and reads its state from these two calls, so they run
+            // before the IsPostBack early-return: a postback render comes back
+            // through here too, and would otherwise come up untitled.
+            var master = (AdminMaster)Master;
+            master.SetPageTitle("Manage Users");
+            master.SetActiveNav("ManageUsers.aspx");
 
             if (!IsPostBack)
                 BindGrid();
+            else if (GridPaging.IsPagerRequest(this, grdUsers))
+            {
+                BindGrid();
+                GridPaging.ApplyIndex(grdUsers, GridPaging.RequestedPage(this).GetValueOrDefault());
+                GridPaging.Rebind(grdUsers);
+            }
+
+            GridPaging.Wire(grdUsers);
         }
 
         private void BindGrid()
         {
             grdUsers.DataSource = _userBLL.GetAllUsersForAdmin();
-            grdUsers.DataBind();
+            GridPaging.Rebind(grdUsers);
         }
 
         protected void grdUsers_RowCommand(object sender, GridViewCommandEventArgs e)
@@ -35,22 +51,29 @@ namespace TechStackLearningHub.Web.Admin
             try
             {
                 int me = AuthBLL.CurrentUserId;
+                User target = FindUser(userId);
+                string username = target.Username;
+                string message;
                 switch (e.CommandName)
                 {
                     case "ToggleActive":
-                        ToggleActive(userId, me);
+                        message = ToggleActive(target, me);
                         break;
                     case "MakeAdmin":
                         _userBLL.ChangeUserRole(userId, "Admin");
+                        message = "\"" + username + "\" is now an admin.";
                         break;
                     case "MakeStudent":
                         if (userId == me)
                             throw new ValidationException("You cannot demote your own account.");
                         _userBLL.ChangeUserRole(userId, "Student");
+                        message = "\"" + username + "\" is now a student.";
                         break;
+                    default:
+                        return;
                 }
-                lblMessage.Visible = false;
                 BindGrid();
+                ShowSuccess(message);
             }
             catch (Exception ex)
             {
@@ -58,47 +81,45 @@ namespace TechStackLearningHub.Web.Admin
             }
         }
 
-        private void ToggleActive(int userId, int me)
+        // The user comes from the BLL, not grdUsers.Rows: the grid is only bound
+        // on a fresh GET, so its Rows are empty during the command's own postback.
+        private string ToggleActive(User target, int me)
         {
-            foreach (GridViewRow row in grdUsers.Rows)
+            if (target.IsActive)
             {
-                if (row.RowType != DataControlRowType.DataRow)
-                    continue;
-                if (Convert.ToInt32(grdUsers.DataKeys[row.RowIndex].Value) != userId)
-                    continue;
-
-                bool isActive = (bool)DataBinder.Eval(row.DataItem, "IsActive");
-                if (isActive)
-                {
-                    // Never let a single admin deactivate their own account and
-                    // lock the app out of administration.
-                    if (userId == me)
-                        throw new ValidationException("You cannot deactivate your own account.");
-                    _userBLL.DeactivateUser(userId);
-                }
-                else
-                {
-                    _userBLL.ActivateUser(userId);
-                }
-                return;
+                // Never let a single admin deactivate their own account and
+                // lock the app out of administration.
+                if (target.UserID == me)
+                    throw new ValidationException("You cannot deactivate your own account.");
+                _userBLL.DeactivateUser(target.UserID);
+                return "Deactivated \"" + target.Username + "\".";
             }
+
+            _userBLL.ActivateUser(target.UserID);
+            return "Reactivated \"" + target.Username + "\".";
+        }
+
+        private User FindUser(int userId)
+        {
+            foreach (User u in _userBLL.GetAllUsersForAdmin())
+            {
+                if (u.UserID == userId)
+                    return u;
+            }
+
+            throw new ValidationException("That account no longer exists. Refresh the list and try again.");
         }
 
         // ValidationException text is authored for the admin and safe to show;
         // anything else is logged rather than rendered.
         private void ShowError(Exception ex)
         {
-            var validation = ex as ValidationException;
-            if (validation != null)
-            {
-                lblMessage.Text = HttpUtility.HtmlEncode(validation.Message);
-            }
-            else
-            {
-                ErrorLogger.Log(ex, "ManageUsers.grdUsers_RowCommand");
-                lblMessage.Text = "The user could not be updated. Please try again.";
-            }
-            lblMessage.Visible = true;
+            AdminUi.Error(lblMessage, lblSuccess, ex, "The user could not be updated. Please try again.", "ManageUsers.grdUsers_RowCommand");
+        }
+
+        private void ShowSuccess(string message)
+        {
+            AdminUi.Success(lblMessage, lblSuccess, message);
         }
     }
 }

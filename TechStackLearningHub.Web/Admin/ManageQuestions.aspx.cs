@@ -5,6 +5,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using TechStackLearningHub.Web.BLL;
 using TechStackLearningHub.Web.Helpers;
+using TechStackLearningHub.Web.Masterpages;
 using TechStackLearningHub.Web.Models;
 
 namespace TechStackLearningHub.Web.Admin
@@ -16,6 +17,13 @@ namespace TechStackLearningHub.Web.Admin
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            // The admin shell (topbar title, highlighted sidebar link) lives in
+            // Admin.Master and reads its state from these two calls, so they run
+            // before the IsPostBack early-return: a postback render comes back
+            // through here too, and would otherwise come up untitled.
+            var master = (AdminMaster)Master;
+            master.SetPageTitle("Manage Questions");
+            master.SetActiveNav("ManageQuestions.aspx");
 
             if (!IsPostBack)
             {
@@ -48,6 +56,7 @@ namespace TechStackLearningHub.Web.Admin
         {
             ResetEditor();
             LoadWorkspace();
+            UrlSync.Sync(this, "QuizID", ddlQuiz.SelectedValue);
         }
 
         private int CurrentQuizId
@@ -95,9 +104,12 @@ namespace TechStackLearningHub.Web.Admin
                     BeginEdit(questionId);
                     break;
                 case "DeleteQuestion":
+                    Question removed = _questionBLL.GetQuestionsByQuizId(CurrentQuizId)
+                        .Find(q => q.QuestionID == questionId);
                     _questionBLL.DeleteQuestion(questionId);
                     ResetEditor();
                     LoadWorkspace();
+                    ShowSuccess("Deleted the question" + (removed == null ? "." : " \"" + Shorten(removed.QuestionText) + "\"."));
                     break;
             }
         }
@@ -117,6 +129,7 @@ namespace TechStackLearningHub.Web.Admin
             lblEditorHeading.InnerText = "Edit question";
             btnCancelEdit.Visible = true;
             lblMessage.Visible = false;
+            lblSuccess.Visible = false;
         }
 
         protected void btnSave_Click(object sender, EventArgs e)
@@ -137,6 +150,7 @@ namespace TechStackLearningHub.Web.Admin
                     });
                 }
 
+                bool wasEdit = !string.IsNullOrEmpty(hidQuestionId.Value);
                 int questionId;
                 if (int.TryParse(hidQuestionId.Value, out questionId) && questionId > 0)
                 {
@@ -156,17 +170,11 @@ namespace TechStackLearningHub.Web.Admin
 
                 ResetEditor();
                 LoadWorkspace();
-            }
-            catch (ValidationException ex)
-            {
-                lblMessage.Text = HttpUtility.HtmlEncode(ex.Message);
-                lblMessage.Visible = true;
+                ShowSuccess(wasEdit ? "Question saved." : "Question added.");
             }
             catch (Exception ex)
             {
-                ErrorLogger.Log(ex, "ManageQuestions.btnSave");
-                lblMessage.Text = "The question could not be saved. Please try again.";
-                lblMessage.Visible = true;
+                ShowError(ex, "ManageQuestions.btnSave");
             }
         }
 
@@ -183,7 +191,28 @@ namespace TechStackLearningHub.Web.Admin
             lblEditorHeading.InnerText = "New question";
             btnCancelEdit.Visible = false;
             lblMessage.Visible = false;
+            lblSuccess.Visible = false;
             BindBlankAnswerRows();
+        }
+
+        private void ShowSuccess(string message)
+        {
+            AdminUi.Success(lblMessage, lblSuccess, message);
+        }
+
+        private void ShowError(Exception ex, string context)
+        {
+            AdminUi.Error(lblMessage, lblSuccess, ex, "The question could not be saved. Please try again.", context);
+        }
+
+        // Question text is free-form and can be very long, so a delete
+        // confirmation quotes only the opening of it.
+        private static string Shorten(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return "";
+            text = text.Trim();
+            return text.Length <= 60 ? text : text.Substring(0, 60) + "...";
         }
     }
 }

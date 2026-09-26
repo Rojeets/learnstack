@@ -10,10 +10,12 @@
         </div>
         <p class="lead"><asp:Literal ID="litDescription" runat="server" /></p>
 
-        <p class="fw-semibold">Overall progress</p>
-        <div class="progress" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+        <p class="fw-semibold" id="lblOverallProgress">Overall progress</p>
+        <div class="progress" id="pnlProgress" runat="server" role="progressbar"
+            aria-labelledby="lblOverallProgress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
             <div class="progress-bar" id="barProgress" runat="server"></div>
         </div>
+        <asp:Label ID="lblProgressSummary" runat="server" CssClass="small text-muted" />
 
         <asp:Repeater ID="rptModules" runat="server">
             <ItemTemplate>

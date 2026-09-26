@@ -205,6 +205,29 @@ namespace TechStackLearningHub.Web.Data_Access_Layer
             }
         }
 
+        /// <summary>
+        /// Pass rate across every attempt on the site, as a percentage 0-100.
+        /// Averaging the per-attempt 100/0 is the same figure as
+        /// passed/total, but it comes back from one aggregate and needs no
+        /// second count in C#. ISNULL keeps an empty Results table returning 0
+        /// instead of NULL, so callers never have to null-check the scalar.
+        /// </summary>
+        public decimal GetAveragePassRatePercent()
+        {
+            const string sql =
+                "SELECT ISNULL(AVG(CASE WHEN IsPassed = 1 THEN 100.0 ELSE 0.0 END), 0) FROM Results";
+
+            using (var con = DbHelper.GetConnection())
+            using (var cmd = DbHelper.CreateCommand(con, sql))
+            {
+                con.Open();
+                object value = cmd.ExecuteScalar();
+                return value == null || value == DBNull.Value
+                    ? 0m
+                    : Convert.ToDecimal(value);
+            }
+        }
+
         private Result MapResult(IDataRecord r)
         {
             return new Result

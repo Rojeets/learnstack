@@ -37,6 +37,28 @@ namespace TechStackLearningHub.Web.Data_Access_Layer
             return list;
         }
 
+        /// <summary>
+        /// Whether this user has already completed this lesson. The lesson page
+        /// needs the real answer on a fresh GET: the completion button used to
+        /// only ever reflect the browser's own optimistic state, so reloading a
+        /// finished lesson offered "Mark as Complete" again.
+        /// </summary>
+        public bool IsLessonComplete(int userId, int lessonId)
+        {
+            const string sql =
+                "SELECT COUNT(1) FROM Progress " +
+                "WHERE UserID = @UserId AND LessonID = @LessonId AND IsCompleted = 1";
+
+            using (var con = DbHelper.GetConnection())
+            using (var cmd = DbHelper.CreateCommand(con, sql))
+            {
+                DbHelper.AddParam(cmd, "@UserId", SqlDbType.Int, 0, userId);
+                DbHelper.AddParam(cmd, "@LessonId", SqlDbType.Int, 0, lessonId);
+                con.Open();
+                return Convert.ToInt32(cmd.ExecuteScalar()) > 0;
+            }
+        }
+
         // Idempotent upsert keyed on the UQ_User_Lesson constraint: calling it twice
         // for the same lesson never creates a duplicate row.
         public void MarkLessonComplete(int userId, int lessonId)

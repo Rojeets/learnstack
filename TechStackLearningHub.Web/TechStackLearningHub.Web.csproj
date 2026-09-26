@@ -99,6 +99,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Admin.css" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -115,6 +116,9 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\bootstrap-icons.min.css" />
+    <Content Include="Content\fonts\bootstrap-icons.woff" />
+    <Content Include="Content\fonts\bootstrap-icons.woff2" />
     <Content Include="Content\Site.css" />
     <Content Include="Pages\Default.aspx" />
     <Content Include="Account\Login.aspx" />
@@ -346,6 +350,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\AdminUi.cs" />
+    <Compile Include="Helpers\GridPaging.cs" />
+    <Compile Include="Helpers\UrlSync.cs" />
     <Compile Include="Helpers\ErrorLogger.cs" />
     <Compile Include="Helpers\PasswordHelper.cs" />
     <Compile Include="Helpers\SqlErrorHelper.cs" />
@@ -390,6 +397,7 @@
     <Compile Include="Models\QuizStatsRow.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\ResultReportRow.cs" />
+    <Compile Include="Models\TechStackCourseCount.cs" />
     <Compile Include="Models\User.cs" />
   </ItemGroup>
   <ItemGroup>

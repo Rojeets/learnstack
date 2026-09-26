@@ -28,5 +28,10 @@ namespace TechStackLearningHub.Web.BLL
         {
             return _resultDAL.GetAttemptCountSince(since);
         }
+
+        public decimal GetAveragePassRatePercent()
+        {
+            return _resultDAL.GetAveragePassRatePercent();
+        }
     }
 }

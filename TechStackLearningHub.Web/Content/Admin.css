@@ -1,0 +1,130 @@
+/* Admin shell. Loaded by Masterpages/Admin.Master only - the student side
+   keeps the flat top navbar in Site.Master and does not reference this file. */
+
+:root {
+    /* Sidebar background: dark, low-saturation, so it does not compete with
+       the data in the content pane. */
+    --admin-navy: #1e2a3a;
+    /* One accent for every "primary action": active link, primary buttons. */
+    --admin-accent: #3b82f6;
+    /* Content pane: light gray, not white, so white cards visibly separate. */
+    --admin-bg: #f4f6f9;
+    --admin-topbar-border: #e5e9f0;
+    --admin-nav-text: #c7d2e0;
+}
+
+body.admin-body {
+    background: var(--admin-bg);
+}
+
+.admin-sidebar {
+    /* Fixed so the sidebar does not scroll away behind a long GridView. */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 240px;
+    min-height: 100vh;
+    background: var(--admin-navy);
+    overflow-y: auto;
+}
+
+.sidebar-brand {
+    padding: 1.25rem 1.25rem 1rem;
+    color: #fff;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.sidebar-brand span {
+    display: block;
+    font-size: .75rem;
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--admin-nav-text);
+}
+
+.admin-sidebar .nav-link {
+    color: var(--admin-nav-text);
+    padding: .65rem 1.25rem;
+    border-left: 3px solid transparent;
+}
+
+.admin-sidebar .nav-link i {
+    /* Fixed-width icon column so labels line up across every row regardless
+       of glyph width. */
+    display: inline-block;
+    width: 1.1rem;
+    margin-right: .6rem;
+    text-align: center;
+}
+
+/* The left accent border, not a background swap, marks the current page: a
+   subtle indicator that does not fight Bootstrap's own focus/hover states. */
+.admin-sidebar .nav-link.active,
+.admin-sidebar .nav-link:hover,
+.admin-sidebar .nav-link:focus {
+    color: #fff;
+    background: rgba(255, 255, 255, .06);
+    border-left-color: var(--admin-accent);
+}
+
+/* Offsets the fixed sidebar by exactly its width. */
+.admin-main {
+    margin-left: 240px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-topbar {
+    background: #fff;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--admin-topbar-border);
+}
+
+.admin-content {
+    flex: 1 1 auto;
+}
+
+/* Stat cards: colored left border per metric rather than four different
+   background colors, which read as noise. */
+.stat-card {
+    border: 0;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, .06);
+}
+
+.stat-card .stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.stack-bar-row {
+    margin-bottom: .75rem;
+}
+
+.stack-bar-row .stack-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: .875rem;
+    margin-bottom: .25rem;
+}
+
+.stack-bar-row .progress {
+    height: .5rem;
+}
+
+/* Below the lg breakpoint a fixed 240px sidebar would squeeze the content
+   pane to nothing. Stack it instead: no JS, no offcanvas dependency. */
+@media screen and (max-width: 991.98px) {
+    .admin-sidebar {
+        position: static;
+        width: 100%;
+        min-height: auto;
+    }
+
+    .admin-main {
+        margin-left: 0;
+    }
+}

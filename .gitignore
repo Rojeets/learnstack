@@ -27,3 +27,13 @@ UploadedNotes/
 
 # Logs
 *.log
+
+# Local SMTP configuration. Real hosts, usernames and passwords must never
+# reach git: the real values belong in environment variables, which is what
+# Helpers/SmtpResetNotifier reads first. These rules are the backstop for a
+# developer who copies TechStackLearningHub.Web/Smtp.config.template to a
+# working file and then forgets to delete it. Smtp.config.template itself is
+# documentation and IS tracked, so only real, filled-in files are listed here.
+Smtp.config
+Smtp.config.local
+*.local.config

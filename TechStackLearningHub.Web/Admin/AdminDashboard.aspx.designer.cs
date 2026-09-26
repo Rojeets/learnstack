@@ -30,13 +30,18 @@ namespace TechStackLearningHub.Web.Admin
         protected global::System.Web.UI.WebControls.Literal litAttemptsWeek;
 
         /// <summary>
-        /// litTotalUsers control.
+        /// litAvgPassRate control.
         /// </summary>
-        protected global::System.Web.UI.WebControls.Literal litTotalUsers;
+        protected global::System.Web.UI.WebControls.Literal litAvgPassRate;
 
         /// <summary>
         /// grdRecent control.
         /// </summary>
         protected global::System.Web.UI.WebControls.GridView grdRecent;
+
+        /// <summary>
+        /// grdStacks control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.GridView grdStacks;
     }
 }

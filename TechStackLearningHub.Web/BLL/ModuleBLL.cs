@@ -20,6 +20,19 @@ namespace TechStackLearningHub.Web.BLL
             return _moduleDAL.SelectById(moduleId);
         }
 
+        /// <summary>
+        /// The course a module belongs to, or 0 when the module does not exist.
+        /// The admin cascade pages need this to resolve a ModuleID-only link:
+        /// their module dropdown can only be filled from a selected course, so
+        /// without the parent id a "ManageLessons.aspx?ModuleID=4" URL resolves
+        /// to nothing and the page renders an empty workspace.
+        /// </summary>
+        public int GetCourseIdForModule(int moduleId)
+        {
+            Module module = _moduleDAL.SelectById(moduleId);
+            return module == null ? 0 : module.CourseID;
+        }
+
         public int AddModuleToCourse(int courseId, string title)
         {
             if (string.IsNullOrWhiteSpace(title))

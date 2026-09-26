@@ -1,17 +1,15 @@
 <%@ Page Title="Reports" Language="C#" MasterPageFile="~/Masterpages/Admin.Master" AutoEventWireup="true" CodeBehind="Reports.aspx.cs" Inherits="TechStackLearningHub.Web.Admin.Reports" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-    <h1>Reports</h1>
-
     <div class="row mb-4">
         <div class="col-md-5">
-            <label class="form-label" for="ddlCourse">Filter by course</label>
+            <asp:Label runat="server" AssociatedControlID="ddlCourse" CssClass="form-label" Text="Filter by course" />
             <asp:DropDownList ID="ddlCourse" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddlCourse_SelectedIndexChanged" />
         </div>
     </div>
 
-    <h3>Quiz results</h3>
-    <asp:GridView ID="grdResults" runat="server" AutoGenerateColumns="false" CssClass="table table-striped mb-4" EmptyDataText="No quiz attempts for this filter.">
+    <h2 class="h5">Quiz results</h2>
+    <asp:GridView ID="grdResults" runat="server" AutoGenerateColumns="false" CssClass="table table-hover mb-0" EmptyDataText="No quiz attempts for this filter." AllowPaging="true" PageSize="10" PagerStyle-CssClass="grid-pager">
         <Columns>
             <asp:BoundField DataField="Username" HeaderText="Student" />
             <asp:BoundField DataField="CourseName" HeaderText="Course" />
@@ -28,11 +26,12 @@
             </asp:TemplateField>
             <asp:BoundField DataField="AttemptDate" HeaderText="Date" DataFormatString="{0:g}" />
         </Columns>
+        <PagerSettings Mode="Numeric" Position="Bottom" PreviousPageText="&#8592; Newer" NextPageText="Older &#8594;" />
     </asp:GridView>
 
     <asp:Panel ID="pnlProgress" runat="server">
-        <h3>Course completion</h3>
-        <asp:GridView ID="grdProgress" runat="server" AutoGenerateColumns="false" CssClass="table table-striped" EmptyDataText="No students have progress in this course yet.">
+        <h2 class="h5">Course completion</h2>
+        <asp:GridView ID="grdProgress" runat="server" AutoGenerateColumns="false" CssClass="table table-hover mb-0" EmptyDataText="No students have progress in this course yet." AllowPaging="true" PageSize="10" PagerStyle-CssClass="grid-pager">
             <Columns>
                 <asp:BoundField DataField="Username" HeaderText="Student" />
                 <asp:BoundField DataField="CourseName" HeaderText="Course" />
@@ -40,6 +39,7 @@
                     <ItemTemplate><%# Eval("PercentComplete") %>%</ItemTemplate>
                 </asp:TemplateField>
             </Columns>
+            <PagerSettings Mode="Numeric" Position="Bottom" PreviousPageText="&#8592; Newer" NextPageText="Older &#8594;" />
         </asp:GridView>
     </asp:Panel>
 </asp:Content>

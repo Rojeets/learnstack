@@ -46,7 +46,18 @@ namespace TechStackLearningHub.Web.Member
 
             int userId = AuthBLL.CurrentUserId;
             decimal percent = _progressBLL.GetCourseProgressSummary(userId, courseId);
-            barProgress.Style["width"] = percent.ToString(System.Globalization.CultureInfo.InvariantCulture) + "%";
+            string percentText = percent.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            barProgress.Style["width"] = percentText + "%";
+
+            // The accessible value has to track the same number the bar is drawn
+            // from, so both are derived from the one `percent` above.
+            pnlProgress.Attributes["aria-valuenow"] = percentText;
+            pnlProgress.Attributes["aria-valuetext"] = percentText + "% complete";
+            lblProgressSummary.Text = percent <= 0
+                ? "You have not started this course yet."
+                : percent >= 100
+                    ? "All lessons in this course are complete."
+                    : "You have completed " + percentText + "% of this course.";
 
             rptModules.DataSource = _moduleBLL.GetModulesForCourse(courseId);
             rptModules.ItemDataBound += rptModules_ItemDataBound;

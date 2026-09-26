@@ -7,44 +7,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%: Page.Title %> - Admin - TechStack Learning Hub</title>
     <link rel="stylesheet" href="<%= ResolveUrl("~/Content/bootstrap.min.css") %>" />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/Content/bootstrap-icons.min.css") %>" />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/Content/Admin.css") %>" />
     <link rel="stylesheet" href="<%= ResolveUrl("~/Content/Site.css") %>" />
     <link href="<%= ResolveUrl("~/favicon.ico") %>" rel="shortcut icon" type="image/x-icon" />
 </head>
-<body class="bg-light">
+<body class="admin-body">
+    <a class="visually-hidden-focusable skip-link" href="#mainContent">Skip to main content</a>
     <form runat="server">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container-fluid">
-                <a class="navbar-brand fw-bold" href="<%= ResolveUrl("~/Admin/AdminDashboard.aspx") %>">TechStack Admin</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav" aria-controls="adminNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="adminNav">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Admin/AdminDashboard.aspx") %>">Dashboard</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Admin/ManageCourses.aspx") %>">Courses</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Admin/ManageModules.aspx") %>">Modules</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Admin/ManageLessons.aspx") %>">Lessons</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Admin/ManageQuizzes.aspx") %>">Quizzes</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Admin/ManageQuestions.aspx") %>">Questions</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Admin/ManageUsers.aspx") %>">Users</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Admin/Reports.aspx") %>">Reports</a></li>
-                    </ul>
-                    <ul class="navbar-nav">
-                        <li class="nav-item"><span class="navbar-text me-3"><asp:Literal ID="litAdminName" runat="server" /></span></li>
-                        <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Member/Dashboard.aspx") %>">Student view</a></li>
-                        <li class="nav-item">
-                            <asp:LinkButton ID="btnAdminLogout" runat="server" CssClass="nav-link" OnClick="btnAdminLogout_Click" Text="Logout" />
-                        </li>
-                    </ul>
-                </div>
+        <div class="d-flex">
+            <nav class="admin-sidebar d-flex flex-column" aria-label="Admin">
+                <div class="sidebar-brand">TechStack Hub<span>Admin</span></div>
+                <ul class="nav flex-column">
+                    <li><asp:HyperLink ID="navDashboard" runat="server" CssClass="nav-link" NavigateUrl="~/Admin/AdminDashboard.aspx"><i class="bi bi-speedometer2"></i>Dashboard</asp:HyperLink></li>
+                    <li><asp:HyperLink ID="navCourses" runat="server" CssClass="nav-link" NavigateUrl="~/Admin/ManageCourses.aspx"><i class="bi bi-journal-bookmark"></i>Courses</asp:HyperLink></li>
+                    <li><asp:HyperLink ID="navModules" runat="server" CssClass="nav-link" NavigateUrl="~/Admin/ManageModules.aspx"><i class="bi bi-diagram-3"></i>Modules</asp:HyperLink></li>
+                    <li><asp:HyperLink ID="navLessons" runat="server" CssClass="nav-link" NavigateUrl="~/Admin/ManageLessons.aspx"><i class="bi bi-file-earmark-text"></i>Lessons</asp:HyperLink></li>
+                    <li><asp:HyperLink ID="navQuizzes" runat="server" CssClass="nav-link" NavigateUrl="~/Admin/ManageQuizzes.aspx"><i class="bi bi-patch-question"></i>Quizzes</asp:HyperLink></li>
+                    <li><asp:HyperLink ID="navQuestions" runat="server" CssClass="nav-link" NavigateUrl="~/Admin/ManageQuestions.aspx"><i class="bi bi-list-check"></i>Questions</asp:HyperLink></li>
+                    <li><asp:HyperLink ID="navUsers" runat="server" CssClass="nav-link" NavigateUrl="~/Admin/ManageUsers.aspx"><i class="bi bi-people"></i>Users</asp:HyperLink></li>
+                    <li><asp:HyperLink ID="navReports" runat="server" CssClass="nav-link" NavigateUrl="~/Admin/Reports.aspx"><i class="bi bi-bar-chart-line"></i>Reports</asp:HyperLink></li>
+                </ul>
+                <ul class="nav flex-column mt-auto">
+                    <li><a class="nav-link" href="<%= ResolveUrl("~/Member/Dashboard.aspx") %>"><i class="bi bi-box-arrow-up-right"></i>Student view</a></li>
+                </ul>
+            </nav>
+            <div class="admin-main">
+                <header class="admin-topbar d-flex justify-content-between align-items-center">
+                    <%-- The admin pages dropped their own <h1> in the sidebar
+                         redesign, so this is the page's top-level heading. Every
+                         in-page heading is nested under it. --%>
+                    <h1 class="h4 mb-0"><asp:Literal ID="litPageTitle" runat="server" /></h1>
+                    <div>
+                        <span class="text-muted me-3">
+                            <asp:Literal ID="litAdminName" runat="server" />
+                        </span>
+                        <asp:LinkButton ID="btnAdminLogout" runat="server" CssClass="btn btn-sm btn-outline-danger"
+                            OnClick="btnAdminLogout_Click">Logout</asp:LinkButton>
+                    </div>
+                </header>
+                <main class="admin-content p-4" id="mainContent" tabindex="-1">
+                    <asp:ContentPlaceHolder ID="MainContent" runat="server">
+                    </asp:ContentPlaceHolder>
+                </main>
             </div>
-        </nav>
-
-        <div class="container body-content py-4">
-            <asp:ContentPlaceHolder ID="MainContent" runat="server">
-            </asp:ContentPlaceHolder>
         </div>
     </form>
+    <%-- WebForms.js defines WebForm_DoPostBackWithOptions, which the Web Forms
+         runtime emits for controls that need postback options (for example the
+         LinkButtons in the module, quiz and question grids). Without this the
+         helper is undefined and those buttons silently do nothing. --%>
+    <script src="<%= ResolveUrl("~/bundles/WebFormsJs") %>"></script>
     <script src="<%= ResolveUrl("~/Scripts/bootstrap.bundle.min.js") %>"></script>
 </body>
 </html>

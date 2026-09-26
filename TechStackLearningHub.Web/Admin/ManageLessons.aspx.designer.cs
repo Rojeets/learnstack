@@ -35,6 +35,11 @@ namespace TechStackLearningHub.Web.Admin
         protected global::System.Web.UI.WebControls.GridView grdLessons;
 
         /// <summary>
+        /// lnkManageQuizzes control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.HyperLink lnkManageQuizzes;
+
+        /// <summary>
         /// lblEditorHeading control.
         /// </summary>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblEditorHeading;
@@ -73,6 +78,11 @@ namespace TechStackLearningHub.Web.Admin
         /// lblMessage control.
         /// </summary>
         protected global::System.Web.UI.WebControls.Label lblMessage;
+
+        /// <summary>
+        /// lblSuccess control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Label lblSuccess;
 
         /// <summary>
         /// btnSave control.
