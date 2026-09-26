@@ -55,6 +55,7 @@ namespace TechStackLearningHub.Web.Admin
         {
             pnlRename.Visible = false;
             LoadWorkspace();
+            UrlSync.Sync(this, "CourseID", ddlCourse.SelectedValue);
         }
 
         private int CurrentCourseId

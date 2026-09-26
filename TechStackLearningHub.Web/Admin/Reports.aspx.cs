@@ -33,6 +33,18 @@ namespace TechStackLearningHub.Web.Admin
                         string.Format("{0} ({1})", course.CourseName, course.TechStack),
                         course.CourseID.ToString()));
                 }
+
+                // Read the filter back out of the URL. Without this the filter
+                // could be written into the address bar but not restored from
+                // it, so a shared or reloaded link would come back unfiltered.
+                int requestedCourse;
+                if (int.TryParse(Request.QueryString["CourseID"], out requestedCourse) && requestedCourse > 0)
+                {
+                    ListItem requested = ddlCourse.Items.FindByValue(requestedCourse.ToString());
+                    if (requested != null)
+                        ddlCourse.SelectedValue = requestedCourse.ToString();
+                }
+
                 BindReports();
             }
             else if (GridPaging.IsPagerRequest(this, grdResults) || GridPaging.IsPagerRequest(this, grdProgress))
@@ -55,6 +67,7 @@ namespace TechStackLearningHub.Web.Admin
         protected void ddlCourse_SelectedIndexChanged(object sender, EventArgs e)
         {
             BindReports();
+            UrlSync.Sync(this, "CourseID", ddlCourse.SelectedValue);
         }
 
         private void BindReports()

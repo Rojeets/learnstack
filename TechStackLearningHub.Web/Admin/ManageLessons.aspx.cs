@@ -105,12 +105,18 @@ namespace TechStackLearningHub.Web.Admin
             BindModuleOptions();
             ResetEditor();
             LoadWorkspace();
+            // Changing the course repopulates the module dropdown, so the module
+            // that is in the URL no longer describes what is on screen.
+            UrlSync.Sync(this, "CourseID", ddlCourse.SelectedValue);
         }
 
         protected void ddlModule_SelectedIndexChanged(object sender, EventArgs e)
         {
             ResetEditor();
             LoadWorkspace();
+            UrlSync.Sync(this,
+                "CourseID", ddlCourse.SelectedValue,
+                "ModuleID", ddlModule.SelectedValue);
         }
 
         private int CurrentModuleId

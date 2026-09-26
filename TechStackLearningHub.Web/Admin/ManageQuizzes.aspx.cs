@@ -104,11 +104,17 @@ namespace TechStackLearningHub.Web.Admin
         {
             BindModuleOptions();
             LoadWorkspace();
+            // A new course means a different set of modules, so the module in the
+            // URL is stale and has to go rather than be carried over.
+            UrlSync.Sync(this, "CourseID", ddlCourse.SelectedValue);
         }
 
         protected void ddlModule_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadWorkspace();
+            UrlSync.Sync(this,
+                "CourseID", ddlCourse.SelectedValue,
+                "ModuleID", ddlModule.SelectedValue);
         }
 
         private int CurrentModuleId

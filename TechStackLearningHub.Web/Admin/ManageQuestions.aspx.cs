@@ -56,6 +56,7 @@ namespace TechStackLearningHub.Web.Admin
         {
             ResetEditor();
             LoadWorkspace();
+            UrlSync.Sync(this, "QuizID", ddlQuiz.SelectedValue);
         }
 
         private int CurrentQuizId
