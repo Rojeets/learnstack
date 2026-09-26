@@ -156,6 +156,10 @@ namespace TechStackLearningHub.Web.Admin
                 : HttpUtility.HtmlAttributeEncode("ManageQuestions.aspx?QuizID=" + quiz.QuizID);
             lnkManageQuestions.Enabled = quiz != null;
 
+            btnDeleteQuiz.OnClientClick = AdminUi.Confirm(
+                "Delete {0} and all its questions? This cannot be undone.",
+                quiz == null ? "this quiz" : quiz.QuizTitle);
+
             if (quiz == null)
             {
                 hidQuizId.Value = "";
@@ -177,6 +181,7 @@ namespace TechStackLearningHub.Web.Admin
             }
             btnCancelEdit.Visible = false;
             lblMessage.Visible = false;
+            lblSuccess.Visible = false;
         }
 
         protected void grdQuizzes_RowCommand(object sender, GridViewCommandEventArgs e)
@@ -203,8 +208,12 @@ namespace TechStackLearningHub.Web.Admin
                         // this command just set up.
                         return;
                     case "DeleteQuiz":
+                        string removedTitle = _quizBLL.GetQuizForModuleId(CurrentModuleId) == null
+                            ? "the quiz"
+                            : _quizBLL.GetQuizForModuleId(CurrentModuleId).QuizTitle;
                         DeleteQuizById(quizId);
                         LoadWorkspace();
+                        ShowSuccess("Deleted \"" + removedTitle + "\".");
                         return;
                     default:
                         // Not one of our commands - GridView raises other
@@ -250,12 +259,15 @@ namespace TechStackLearningHub.Web.Admin
             {
                 int passMark = int.Parse(txtPassMark.Text.Trim());
                 int durationMinutes = int.Parse(txtDurationMinutes.Text.Trim());
+                bool wasEdit = !string.IsNullOrEmpty(hidQuizId.Value);
+                string title = txtQuizTitle.Text.Trim();
                 int quizId;
                 if (int.TryParse(hidQuizId.Value, out quizId) && quizId > 0)
-                    _quizBLL.UpdateQuiz(quizId, txtQuizTitle.Text.Trim(), passMark, durationMinutes);
+                    _quizBLL.UpdateQuiz(quizId, title, passMark, durationMinutes);
                 else
-                    _quizBLL.CreateQuiz(CurrentModuleId, txtQuizTitle.Text.Trim(), passMark, durationMinutes);
+                    _quizBLL.CreateQuiz(CurrentModuleId, title, passMark, durationMinutes);
                 LoadWorkspace();
+                ShowSuccess(wasEdit ? "Saved \"" + title + "\"." : "Created \"" + title + "\".");
             }
             catch (Exception ex)
             {
@@ -271,8 +283,17 @@ namespace TechStackLearningHub.Web.Admin
             {
                 int quizId;
                 if (int.TryParse(hidQuizId.Value, out quizId) && quizId > 0)
+                {
+                    Quiz existing = _quizBLL.GetQuizForModuleId(CurrentModuleId);
+                    string title = existing == null ? "the quiz" : existing.QuizTitle;
                     DeleteQuizById(quizId);
-                LoadWorkspace();
+                    LoadWorkspace();
+                    ShowSuccess("Deleted \"" + title + "\".");
+                }
+                else
+                {
+                    LoadWorkspace();
+                }
             }
             catch (Exception ex)
             {
@@ -322,17 +343,12 @@ namespace TechStackLearningHub.Web.Admin
         // fragment can never reach the rendered page.
         private void ShowError(Exception ex, string context)
         {
-            var validation = ex as ValidationException;
-            if (validation != null)
-            {
-                lblMessage.Text = HttpUtility.HtmlEncode(validation.Message);
-            }
-            else
-            {
-                ErrorLogger.Log(ex, context);
-                lblMessage.Text = "The quiz could not be saved. Please try again.";
-            }
-            lblMessage.Visible = true;
+            AdminUi.Error(lblMessage, lblSuccess, ex, "The quiz could not be saved. Please try again.", context);
+        }
+
+        private void ShowSuccess(string message)
+        {
+            AdminUi.Success(lblMessage, lblSuccess, message);
         }
     }
 }

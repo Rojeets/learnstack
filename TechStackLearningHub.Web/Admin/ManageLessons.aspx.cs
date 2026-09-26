@@ -170,9 +170,11 @@ namespace TechStackLearningHub.Web.Admin
                     BeginEdit(lessonId);
                     break;
                 case "DeleteLesson":
+                    Lesson removed = _lessonBLL.GetLessonDetail(lessonId);
                     _lessonBLL.DeleteLesson(lessonId);
                     ResetEditor();
                     LoadWorkspace();
+                    ShowSuccess("Deleted \"" + (removed == null ? "the lesson" : removed.LessonTitle) + "\".");
                     break;
             }
         }
@@ -193,6 +195,7 @@ namespace TechStackLearningHub.Web.Admin
             lblEditorHeading.InnerText = "Edit lesson";
             btnCancelEdit.Visible = true;
             lblMessage.Visible = false;
+            lblSuccess.Visible = false;
         }
 
         protected void btnSave_Click(object sender, EventArgs e)
@@ -201,25 +204,21 @@ namespace TechStackLearningHub.Web.Admin
 
             try
             {
+                bool wasEdit = !string.IsNullOrEmpty(hidLessonId.Value);
                 string notesPath = SaveUploadedNotes();
+                string title = txtLessonTitle.Text.Trim();
                 ApplyLesson(notesPath);
                 ResetEditor();
                 LoadWorkspace();
-            }
-            catch (ValidationException ex)
-            {
-                // Authored, user-facing text - safe to render verbatim.
-                lblMessage.Text = HttpUtility.HtmlEncode(ex.Message);
-                lblMessage.Visible = true;
+                ShowSuccess(wasEdit ? "Saved \"" + title + "\"." : "Added \"" + title + "\".");
             }
             catch (Exception ex)
             {
-                // Anything else is a fault, not feedback. A dead connection or
-                // a constraint violation must not leak its message (and with it
+                // A ValidationException is authored, user-facing text. Anything
+                // else is a fault, not feedback: a dead connection or a
+                // constraint violation must not leak its message (and with it
                 // the connection string) into the page source.
-                ErrorLogger.Log(ex, "ManageLessons.btnSave");
-                lblMessage.Text = "The lesson could not be saved. Please try again.";
-                lblMessage.Visible = true;
+                ShowError(ex, "ManageLessons.btnSave");
             }
         }
 
@@ -282,6 +281,17 @@ namespace TechStackLearningHub.Web.Admin
             lblEditorHeading.InnerText = "New lesson";
             btnCancelEdit.Visible = false;
             lblMessage.Visible = false;
+            lblSuccess.Visible = false;
+        }
+
+        private void ShowSuccess(string message)
+        {
+            AdminUi.Success(lblMessage, lblSuccess, message);
+        }
+
+        private void ShowError(Exception ex, string context)
+        {
+            AdminUi.Error(lblMessage, lblSuccess, ex, "The lesson could not be saved. Please try again.", context);
         }
     }
 }

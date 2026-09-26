@@ -1,4 +1,5 @@
 <%@ Page Title="Manage Modules" Language="C#" MasterPageFile="~/Masterpages/Admin.Master" AutoEventWireup="true" CodeBehind="ManageModules.aspx.cs" Inherits="TechStackLearningHub.Web.Admin.ManageModules" %>
+<%@ Import Namespace="TechStackLearningHub.Web.Helpers" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row mb-3">
@@ -36,7 +37,7 @@
                                         <asp:LinkButton runat="server" Text="Rename" CommandName="RenameModule" CommandArgument='<%# Eval("ModuleID") %>' CssClass="btn btn-sm btn-outline-primary" />
                                         <asp:LinkButton runat="server" Text="Lessons" CommandName="ManageLessons" CommandArgument='<%# Eval("ModuleID") %>' CssClass="btn btn-sm btn-outline-info" />
                                         <asp:LinkButton runat="server" Text="Delete" CommandName="DeleteModule" CommandArgument='<%# Eval("ModuleID") %>' CssClass="btn btn-sm btn-outline-danger"
-                                            OnClientClick="return confirm('Delete this module and its lessons?');" />
+                                            OnClientClick='<%# AdminUi.Confirm("Delete {0} and its lessons?", Eval("ModuleTitle")) %>' />
                                     </ItemTemplate>
                                 </asp:TemplateField>
                             </Columns>
@@ -80,4 +81,5 @@
     </asp:Panel>
 
     <asp:Label ID="lblMessage" runat="server" CssClass="text-danger d-block mt-3" Visible="false" role="alert" />
+    <asp:Label ID="lblSuccess" runat="server" CssClass="text-success d-block mt-3" Visible="false" role="status" />
 </asp:Content>

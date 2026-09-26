@@ -65,6 +65,10 @@ namespace TechStackLearningHub.Web.Admin
         protected global::System.Web.UI.WebControls.Label lblMessage;
 
         /// <summary>
+        /// lblSuccess control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Label lblSuccess;
+        /// <summary>
         /// grdModules control.
         /// </summary>
         protected global::System.Web.UI.WebControls.GridView grdModules;

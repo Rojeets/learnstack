@@ -1,4 +1,5 @@
 <%@ Page Title="Manage Users" Language="C#" MasterPageFile="~/Masterpages/Admin.Master" AutoEventWireup="true" CodeBehind="ManageUsers.aspx.cs" Inherits="TechStackLearningHub.Web.Admin.ManageUsers" %>
+<%@ Import Namespace="TechStackLearningHub.Web.Helpers" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <asp:GridView ID="grdUsers" runat="server" AutoGenerateColumns="false" CssClass="table table-hover mb-0"
@@ -16,18 +17,20 @@
             <asp:BoundField DataField="CreatedDate" HeaderText="Registered" DataFormatString="{0:d}" />
             <asp:TemplateField>
                 <ItemTemplate>
-                    <asp:LinkButton runat="server" Text="Deactivate" CommandName="ToggleActive" CommandArgument='<%# Eval("UserID") %>' CssClass="btn btn-sm btn-outline-danger"
-                        Visible='<%# (bool)Eval("IsActive") %>' OnClientClick="return confirm('Deactivate this account? The user will no longer be able to log in.');" />
-                    <asp:LinkButton runat="server" Text="Activate" CommandName="ToggleActive" CommandArgument='<%# Eval("UserID") %>' CssClass="btn btn-sm btn-outline-success"
-                        Visible='<%# !(bool)Eval("IsActive") %>' />
                     <asp:LinkButton runat="server" Text="Make admin" CommandName="MakeAdmin" CommandArgument='<%# Eval("UserID") %>' CssClass="btn btn-sm btn-outline-secondary"
                         Visible='<%# Eval("RoleName").ToString() != "Admin" %>' />
                     <asp:LinkButton runat="server" Text="Make student" CommandName="MakeStudent" CommandArgument='<%# Eval("UserID") %>' CssClass="btn btn-sm btn-outline-info"
                         Visible='<%# Eval("RoleName").ToString() != "Student" %>' />
+                    <asp:LinkButton runat="server" Text="Activate" CommandName="ToggleActive" CommandArgument='<%# Eval("UserID") %>' CssClass="btn btn-sm btn-outline-success"
+                        Visible='<%# !(bool)Eval("IsActive") %>' />
+                    <asp:LinkButton runat="server" Text="Deactivate" CommandName="ToggleActive" CommandArgument='<%# Eval("UserID") %>' CssClass="btn btn-sm btn-outline-danger"
+                        Visible='<%# (bool)Eval("IsActive") %>'
+                        OnClientClick='<%# AdminUi.Confirm("Deactivate {0}? They will no longer be able to log in.", Eval("Username")) %>' />
                 </ItemTemplate>
             </asp:TemplateField>
         </Columns>
     </asp:GridView>
 
     <asp:Label ID="lblMessage" runat="server" CssClass="text-danger" Visible="false" role="alert" />
+    <asp:Label ID="lblSuccess" runat="server" CssClass="text-success" Visible="false" role="status" />
 </asp:Content>

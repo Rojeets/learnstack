@@ -1,6 +1,5 @@
 using System;
 using System.Threading;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using TechStackLearningHub.Web.BLL;
@@ -48,6 +47,7 @@ namespace TechStackLearningHub.Web.Admin
             try
             {
                 int courseId;
+                string savedName;
                 if (int.TryParse(hidCourseId.Value, out courseId) && courseId > 0)
                 {
                     Course course = _courseBLL.GetCourseForAdminEdit(courseId);
@@ -55,12 +55,14 @@ namespace TechStackLearningHub.Web.Admin
                     course.TechStack = ddlTechStack.SelectedValue;
                     course.Description = txtDescription.Text.Trim();
                     _courseBLL.UpdateCourse(course);
+                    savedName = course.CourseName;
                 }
                 else
                 {
+                    savedName = txtCourseName.Text.Trim();
                     _courseBLL.CreateCourse(new Course
                     {
-                        CourseName = txtCourseName.Text.Trim(),
+                        CourseName = savedName,
                         TechStack = ddlTechStack.SelectedValue,
                         Description = txtDescription.Text.Trim(),
                         IsPublished = false
@@ -69,6 +71,7 @@ namespace TechStackLearningHub.Web.Admin
 
                 ResetEditor(null);
                 BindGrid();
+                ShowSuccess("Saved \"" + savedName + "\".");
             }
             catch (Exception ex)
             {
@@ -101,12 +104,20 @@ namespace TechStackLearningHub.Web.Admin
                         if (course == null)
                             return;
                         if (!course.IsPublished)
+                        {
                             _courseBLL.PublishCourse(courseId);
+                            ShowSuccess("Published \"" + course.CourseName + "\".");
+                        }
                         else
+                        {
                             _courseBLL.UnpublishCourse(courseId);
+                            ShowSuccess("Unpublished \"" + course.CourseName + "\". It is hidden from students again.");
+                        }
                         break;
                     case "DeleteCourse":
+                        Course deleted = _courseBLL.GetCourseForAdminEdit(courseId);
                         _courseBLL.DeleteCourse(courseId);
+                        ShowSuccess("Deleted \"" + (deleted == null ? "the course" : deleted.CourseName) + "\".");
                         break;
                     case "ManageModules":
                         Response.Redirect("ManageModules.aspx?CourseID=" + courseId);
@@ -151,6 +162,12 @@ namespace TechStackLearningHub.Web.Admin
             lblEditorHeading.InnerText = "New course";
             btnCancelEdit.Visible = false;
             lblMessage.Visible = false;
+            lblSuccess.Visible = false;
+        }
+
+        private void ShowSuccess(string message)
+        {
+            AdminUi.Success(lblMessage, lblSuccess, message);
         }
 
         // A ValidationException is authored for the admin, so its text is safe
@@ -161,18 +178,7 @@ namespace TechStackLearningHub.Web.Admin
         // error pages instead of inline messages.
         private void ShowError(Exception ex, string context)
         {
-            lblMessage.CssClass = "text-danger d-block mt-2";
-            var validation = ex as ValidationException;
-            if (validation != null)
-            {
-                lblMessage.Text = HttpUtility.HtmlEncode(validation.Message);
-            }
-            else
-            {
-                ErrorLogger.Log(ex, context);
-                lblMessage.Text = "The course could not be saved. Please try again.";
-            }
-            lblMessage.Visible = true;
+            AdminUi.Error(lblMessage, lblSuccess, ex, "The course could not be saved. Please try again.", context);
         }
     }
 }

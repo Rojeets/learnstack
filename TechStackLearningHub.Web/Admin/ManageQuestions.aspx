@@ -1,4 +1,5 @@
 <%@ Page Title="Manage Questions" Language="C#" MasterPageFile="~/Masterpages/Admin.Master" AutoEventWireup="true" CodeBehind="ManageQuestions.aspx.cs" Inherits="TechStackLearningHub.Web.Admin.ManageQuestions" %>
+<%@ Import Namespace="TechStackLearningHub.Web.Helpers" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row g-3 mb-4">
@@ -25,7 +26,7 @@
                                     <ItemTemplate>
                                         <asp:LinkButton runat="server" Text="Edit" CommandName="EditQuestion" CommandArgument='<%# Eval("QuestionID") %>' CssClass="btn btn-sm btn-outline-primary" />
                                         <asp:LinkButton runat="server" Text="Delete" CommandName="DeleteQuestion" CommandArgument='<%# Eval("QuestionID") %>' CssClass="btn btn-sm btn-outline-danger"
-                                            OnClientClick="return confirm('Delete this question and its answers?');" />
+                                            OnClientClick='<%# AdminUi.Confirm("Delete the question {0} and its answers?", Eval("QuestionText")) %>' />
                                     </ItemTemplate>
                                 </asp:TemplateField>
                             </Columns>
@@ -70,6 +71,7 @@
                         </div>
 
                         <asp:Label ID="lblMessage" runat="server" CssClass="text-danger d-block mt-2" Visible="false" role="alert" />
+                        <asp:Label ID="lblSuccess" runat="server" CssClass="text-success d-block mt-2" Visible="false" role="status" />
                         <div class="mt-3">
                             <asp:Button ID="btnSave" runat="server" Text="Save question" CssClass="btn btn-primary" OnClick="btnSave_Click" />
                             <asp:Button ID="btnCancelEdit" runat="server" Text="Cancel" CssClass="btn btn-outline-secondary" OnClick="btnCancelEdit_Click" Visible="false" />

@@ -1,4 +1,5 @@
 <%@ Page Title="Manage Quizzes" Language="C#" MasterPageFile="~/Masterpages/Admin.Master" AutoEventWireup="true" CodeBehind="ManageQuizzes.aspx.cs" Inherits="TechStackLearningHub.Web.Admin.ManageQuizzes" %>
+<%@ Import Namespace="TechStackLearningHub.Web.Helpers" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row g-3 mb-4">
@@ -33,7 +34,7 @@
                                 <ItemTemplate>
                                     <asp:LinkButton runat="server" CssClass="btn btn-sm btn-outline-primary" Text="Edit" CommandName="EditQuiz" CommandArgument='<%# Eval("QuizID") %>' />
                                     <asp:LinkButton runat="server" CssClass="btn btn-sm btn-outline-danger" Text="Delete" CommandName="DeleteQuiz" CommandArgument='<%# Eval("QuizID") %>'
-                                        OnClientClick="return confirm('Delete this quiz and all its questions?');" />
+                                        OnClientClick='<%# AdminUi.Confirm("Delete {0} and all its questions?", Eval("QuizTitle")) %>' />
                                 </ItemTemplate>
                             </asp:TemplateField>
                         </Columns>
@@ -73,11 +74,11 @@
                         </div>
                     </div>
                     <asp:Label ID="lblMessage" runat="server" CssClass="text-danger d-block mt-2" Visible="false" role="alert" />
+                    <asp:Label ID="lblSuccess" runat="server" CssClass="text-success d-block mt-2" Visible="false" role="status" />
                     <div class="mt-3">
                         <asp:Button ID="btnSaveQuiz" runat="server" Text="Save quiz" CssClass="btn btn-primary" OnClick="btnSaveQuiz_Click" />
                         <asp:Button ID="btnCancelEdit" runat="server" Text="Cancel" CssClass="btn btn-outline-secondary" OnClick="btnCancelEdit_Click" Visible="false" />
-                        <asp:Button ID="btnDeleteQuiz" runat="server" Text="Delete quiz" CssClass="btn btn-outline-danger" OnClick="btnDeleteQuiz_Click"
-                            OnClientClick="return confirm('Delete this quiz and all its questions?');" />
+                        <asp:Button ID="btnDeleteQuiz" runat="server" Text="Delete quiz" CssClass="btn btn-outline-danger" OnClick="btnDeleteQuiz_Click" />
                         <asp:HyperLink ID="lnkManageQuestions" runat="server" CssClass="btn btn-outline-info" Text="Manage questions &raquo;" />
                     </div>
                 </div>

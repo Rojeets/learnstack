@@ -1,4 +1,5 @@
 <%@ Page Title="Manage Lessons" Language="C#" MasterPageFile="~/Masterpages/Admin.Master" AutoEventWireup="true" CodeBehind="ManageLessons.aspx.cs" Inherits="TechStackLearningHub.Web.Admin.ManageLessons" %>
+<%@ Import Namespace="TechStackLearningHub.Web.Helpers" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row g-3 mb-4">
@@ -33,7 +34,7 @@
                                     <ItemTemplate>
                                         <asp:LinkButton runat="server" Text="Edit" CommandName="EditLesson" CommandArgument='<%# Eval("LessonID") %>' CssClass="btn btn-sm btn-outline-primary" />
                                         <asp:LinkButton runat="server" Text="Delete" CommandName="DeleteLesson" CommandArgument='<%# Eval("LessonID") %>' CssClass="btn btn-sm btn-outline-danger"
-                                            OnClientClick="return confirm('Delete this lesson? Progress on it will be removed.');" />
+                                            OnClientClick='<%# AdminUi.Confirm("Delete {0}? Student progress on it will be removed.", Eval("LessonTitle")) %>' />
                                     </ItemTemplate>
                                 </asp:TemplateField>
                             </Columns>
@@ -69,6 +70,7 @@
                             </div>
                         </div>
                         <asp:Label ID="lblMessage" runat="server" CssClass="text-danger d-block mt-2" Visible="false" role="alert" />
+                        <asp:Label ID="lblSuccess" runat="server" CssClass="text-success d-block mt-2" Visible="false" role="status" />
                         <div class="mt-3">
                             <asp:Button ID="btnSave" runat="server" Text="Save lesson" CssClass="btn btn-primary" OnClick="btnSave_Click" />
                             <asp:Button ID="btnCancelEdit" runat="server" Text="Cancel" CssClass="btn btn-outline-secondary" OnClick="btnCancelEdit_Click" Visible="false" />

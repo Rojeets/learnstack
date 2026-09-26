@@ -23,5 +23,10 @@ namespace TechStackLearningHub.Web.Admin
         /// lblMessage control.
         /// </summary>
         protected global::System.Web.UI.WebControls.Label lblMessage;
+
+        /// <summary>
+        /// lblSuccess control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Label lblSuccess;
     }
 }

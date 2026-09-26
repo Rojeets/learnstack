@@ -1,4 +1,5 @@
 <%@ Page Title="Manage Courses" Language="C#" MasterPageFile="~/Masterpages/Admin.Master" AutoEventWireup="true" CodeBehind="ManageCourses.aspx.cs" Inherits="TechStackLearningHub.Web.Admin.ManageCourses" %>
+<%@ Import Namespace="TechStackLearningHub.Web.Helpers" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row g-3">
@@ -27,9 +28,9 @@
                                         Visible='<%# !(bool)Eval("IsPublished") %>' />
                                     <asp:LinkButton runat="server" Text="Unpublish" CommandName="TogglePublish" CommandArgument='<%# Eval("CourseID") %>' CssClass="btn btn-sm btn-outline-warning"
                                         Visible='<%# (bool)Eval("IsPublished") %>' />
-                                    <asp:LinkButton runat="server" Text="Delete" CommandName="DeleteCourse" CommandArgument='<%# Eval("CourseID") %>' CssClass="btn btn-sm btn-outline-danger"
-                                        OnClientClick="return confirm('Delete this course and everything under it?');" />
                                     <asp:LinkButton runat="server" Text="Modules" CommandName="ManageModules" CommandArgument='<%# Eval("CourseID") %>' CssClass="btn btn-sm btn-outline-info" />
+                                    <asp:LinkButton runat="server" Text="Delete" CommandName="DeleteCourse" CommandArgument='<%# Eval("CourseID") %>' CssClass="btn btn-sm btn-outline-danger"
+                                        OnClientClick='<%# AdminUi.Confirm("Delete {0} and everything under it? This cannot be undone.", Eval("CourseName")) %>' />
                                 </ItemTemplate>
                             </asp:TemplateField>
                         </Columns>
@@ -60,6 +61,7 @@
                         </div>
                     </div>
                     <asp:Label ID="lblMessage" runat="server" CssClass="text-danger d-block mt-2" Visible="false" role="alert" />
+                    <asp:Label ID="lblSuccess" runat="server" CssClass="text-success d-block mt-2" Visible="false" role="status" />
                     <div class="mt-3">
                         <asp:Button ID="btnSave" runat="server" Text="Save course" CssClass="btn btn-primary" OnClick="btnSave_Click" />
                         <asp:Button ID="btnCancelEdit" runat="server" Text="Cancel" CssClass="btn btn-outline-secondary" OnClick="btnCancelEdit_Click" Visible="false" />
