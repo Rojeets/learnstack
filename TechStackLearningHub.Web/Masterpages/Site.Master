@@ -1,0 +1,62 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Master.cs" Inherits="TechStackLearningHub.Web.Masterpages.SiteMaster" %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - TechStack Learning Hub</title>
+    <link rel="stylesheet" href="<%= ResolveUrl("~/Content/bootstrap.min.css") %>" />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/Content/Site.css") %>" />
+    <link href="<%= ResolveUrl("~/favicon.ico") %>" rel="shortcut icon" type="image/x-icon" />
+</head>
+<body>
+    <form runat="server">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold" href="<%= ResolveUrl("~/Pages/Default.aspx") %>">TechStack Learning Hub</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav me-auto">
+                        <asp:Panel ID="pnlAnonymous" runat="server" Visible="false">
+                            <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Account/Login.aspx") %>">Login</a></li>
+                            <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Account/Register.aspx") %>">Register</a></li>
+                        </asp:Panel>
+                        <asp:Panel ID="pnlStudent" runat="server" Visible="false">
+                            <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Member/Dashboard.aspx") %>">Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Member/CourseCatalog.aspx") %>">Course Catalogue</a></li>
+                            <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Member/ProgressDashboard.aspx") %>">Progress</a></li>
+                            <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Member/ResultsHistory.aspx") %>">Results</a></li>
+                        </asp:Panel>
+                        <asp:Panel ID="pnlAdmin" runat="server" Visible="false">
+                            <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Admin/AdminDashboard.aspx") %>">Admin Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Admin/ManageCourses.aspx") %>">Courses</a></li>
+                            <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Admin/Reports.aspx") %>">Reports</a></li>
+                        </asp:Panel>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <asp:Panel ID="pnlAuthenticated" runat="server" Visible="false">
+                            <li class="nav-item"><span class="navbar-text me-3"><asp:Literal ID="litUser" runat="server" /></span></li>
+                            <li class="nav-item">
+                                <asp:LinkButton ID="btnLogout" runat="server" CssClass="nav-link" OnClick="btnLogout_Click" Text="Logout" />
+                            </li>
+                        </asp:Panel>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container body-content py-4">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+            <hr />
+            <footer class="text-muted">
+                <p>&copy; <%: DateTime.Now.Year %> - TechStack Learning Hub</p>
+            </footer>
+        </div>
+    </form>
+    <script src="<%= ResolveUrl("~/Scripts/bootstrap.bundle.min.js") %>"></script>
+</body>
+</html>

@@ -116,16 +116,16 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\Site.css" />
-    <Content Include="Default.aspx" />
-    <Content Include="Login.aspx" />
-    <Content Include="Register.aspx" />
-    <Content Include="Student\Dashboard.aspx" />
-    <Content Include="Student\CourseCatalog.aspx" />
-    <Content Include="Student\CourseDetails.aspx" />
-    <Content Include="Student\LessonViewer.aspx" />
-    <Content Include="Student\QuizPage.aspx" />
-    <Content Include="Student\ResultsHistory.aspx" />
-    <Content Include="Student\ProgressDashboard.aspx" />
+    <Content Include="Pages\Default.aspx" />
+    <Content Include="Account\Login.aspx" />
+    <Content Include="Account\Register.aspx" />
+    <Content Include="Member\Dashboard.aspx" />
+    <Content Include="Member\CourseCatalog.aspx" />
+    <Content Include="Member\CourseDetails.aspx" />
+    <Content Include="Member\LessonViewer.aspx" />
+    <Content Include="Member\QuizPage.aspx" />
+    <Content Include="Member\ResultsHistory.aspx" />
+    <Content Include="Member\ProgressDashboard.aspx" />
     <Content Include="Admin\AdminDashboard.aspx" />
     <Content Include="Admin\ManageCourses.aspx" />
     <Content Include="Admin\ManageModules.aspx" />
@@ -191,93 +191,101 @@
     <Content Include="Scripts\WebForms\WebForms.js" />
     <Content Include="Scripts\WebForms\WebParts.js" />
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
-    <Content Include="Site.Master" />
+    <Content Include="Masterpages\Site.Master" />
+    <Content Include="Masterpages\Admin.Master" />
+    <Content Include="App_Data\TechStackLearningHub.sql" />
     <Content Include="Web.config" />
     <Content Include="Bundle.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="App_Start\RoleGuard.cs" />
-    <Compile Include="Default.aspx.cs">
+    <Compile Include="Pages\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Default.aspx.designer.cs">
+    <Compile Include="Pages\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Login.aspx.cs">
+    <Compile Include="Account\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Login.aspx.designer.cs">
+    <Compile Include="Account\Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Register.aspx.cs">
+    <Compile Include="Account\Register.aspx.cs">
       <DependentUpon>Register.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Register.aspx.designer.cs">
+    <Compile Include="Account\Register.aspx.designer.cs">
       <DependentUpon>Register.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Site.Master.cs">
+    <Compile Include="Masterpages\Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Site.Master.designer.cs">
+    <Compile Include="Masterpages\Site.Master.designer.cs">
       <DependentUpon>Site.Master</DependentUpon>
     </Compile>
-    <Compile Include="Student\Dashboard.aspx.cs">
+    <Compile Include="Masterpages\Admin.Master.cs">
+      <DependentUpon>Admin.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Masterpages\Admin.Master.designer.cs">
+      <DependentUpon>Admin.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Member\Dashboard.aspx.cs">
       <DependentUpon>Dashboard.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Student\Dashboard.aspx.designer.cs">
+    <Compile Include="Member\Dashboard.aspx.designer.cs">
       <DependentUpon>Dashboard.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Student\CourseCatalog.aspx.cs">
+    <Compile Include="Member\CourseCatalog.aspx.cs">
       <DependentUpon>CourseCatalog.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Student\CourseCatalog.aspx.designer.cs">
+    <Compile Include="Member\CourseCatalog.aspx.designer.cs">
       <DependentUpon>CourseCatalog.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Student\CourseDetails.aspx.cs">
+    <Compile Include="Member\CourseDetails.aspx.cs">
       <DependentUpon>CourseDetails.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Student\CourseDetails.aspx.designer.cs">
+    <Compile Include="Member\CourseDetails.aspx.designer.cs">
       <DependentUpon>CourseDetails.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Student\LessonViewer.aspx.cs">
+    <Compile Include="Member\LessonViewer.aspx.cs">
       <DependentUpon>LessonViewer.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Student\LessonViewer.aspx.designer.cs">
+    <Compile Include="Member\LessonViewer.aspx.designer.cs">
       <DependentUpon>LessonViewer.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Student\QuizPage.aspx.cs">
+    <Compile Include="Member\QuizPage.aspx.cs">
       <DependentUpon>QuizPage.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Student\QuizPage.aspx.designer.cs">
+    <Compile Include="Member\QuizPage.aspx.designer.cs">
       <DependentUpon>QuizPage.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Student\ResultsHistory.aspx.cs">
+    <Compile Include="Member\ResultsHistory.aspx.cs">
       <DependentUpon>ResultsHistory.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Student\ResultsHistory.aspx.designer.cs">
+    <Compile Include="Member\ResultsHistory.aspx.designer.cs">
       <DependentUpon>ResultsHistory.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Student\ProgressDashboard.aspx.cs">
+    <Compile Include="Member\ProgressDashboard.aspx.cs">
       <DependentUpon>ProgressDashboard.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Student\ProgressDashboard.aspx.designer.cs">
+    <Compile Include="Member\ProgressDashboard.aspx.designer.cs">
       <DependentUpon>ProgressDashboard.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\AdminDashboard.aspx.cs">
@@ -338,6 +346,53 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\ErrorLogger.cs" />
+    <Compile Include="Helpers\PasswordHelper.cs" />
+    <Compile Include="Helpers\SqlErrorHelper.cs" />
+    <Compile Include="BLL\ValidationException.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BLL\AuthBLL.cs" />
+    <Compile Include="BLL\CourseBLL.cs" />
+    <Compile Include="BLL\LessonBLL.cs" />
+    <Compile Include="BLL\ModuleBLL.cs" />
+    <Compile Include="BLL\ProgressBLL.cs" />
+    <Compile Include="BLL\QuestionBLL.cs" />
+    <Compile Include="BLL\QuizBLL.cs" />
+    <Compile Include="BLL\ResultBLL.cs" />
+    <Compile Include="BLL\UserBLL.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Data_Access_Layer\DbHelper.cs" />
+    <Compile Include="Data_Access_Layer\CourseDAL.cs" />
+    <Compile Include="Data_Access_Layer\ModuleDAL.cs" />
+    <Compile Include="Data_Access_Layer\LessonDAL.cs" />
+    <Compile Include="Data_Access_Layer\QuizDAL.cs" />
+    <Compile Include="Data_Access_Layer\QuestionDAL.cs" />
+    <Compile Include="Data_Access_Layer\AnswerDAL.cs" />
+    <Compile Include="Data_Access_Layer\ResultDAL.cs" />
+    <Compile Include="Data_Access_Layer\ProgressDAL.cs" />
+    <Compile Include="Data_Access_Layer\UserDAL.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\Answer.cs" />
+    <Compile Include="Models\AnswerInput.cs" />
+    <Compile Include="Models\AttemptSummary.cs" />
+    <Compile Include="Models\Course.cs" />
+    <Compile Include="Models\CourseProgressSummary.cs" />
+    <Compile Include="Models\Lesson.cs" />
+    <Compile Include="Models\Module.cs" />
+    <Compile Include="Models\Progress.cs" />
+    <Compile Include="Models\ProgressReportRow.cs" />
+    <Compile Include="Models\Question.cs" />
+    <Compile Include="Models\Quiz.cs" />
+    <Compile Include="Models\QuizListItem.cs" />
+    <Compile Include="Models\QuizStatsRow.cs" />
+    <Compile Include="Models\Result.cs" />
+    <Compile Include="Models\ResultReportRow.cs" />
+    <Compile Include="Models\User.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
@@ -350,16 +405,6 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TechStackLearningHub.BLL\TechStackLearningHub.BLL.csproj">
-      <Project>{31ceceba-4035-4822-8eef-07ff565a7a0e}</Project>
-      <Name>TechStackLearningHub.BLL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TechStackLearningHub.DAL\TechStackLearningHub.DAL.csproj">
-      <Project>{cc61d4e8-8e3c-483e-91ca-06c5e95cc35e}</Project>
-      <Name>TechStackLearningHub.DAL</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

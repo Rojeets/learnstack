@@ -1,23 +1,24 @@
 using System;
+using System.Threading;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using TechStackLearningHub.BLL;
-using TechStackLearningHub.DAL.Models;
+using TechStackLearningHub.Web.BLL;
+using TechStackLearningHub.Web.Helpers;
+using TechStackLearningHub.Web.Models;
 
 namespace TechStackLearningHub.Web.Admin
 {
     public partial class ManageCourses : Page
     {
-        private readonly CourseService _courseService = new CourseService();
+        private readonly CourseBLL _courseBLL = new CourseBLL();
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            RoleGuard.RequireAdmin(this);
 
             if (!IsPostBack)
             {
-                foreach (string stack in CourseService.KnownTechStacks)
+                foreach (string stack in CourseBLL.KnownTechStacks)
                 {
                     ddlTechStack.Items.Add(new ListItem(stack, stack));
                 }
@@ -27,26 +28,28 @@ namespace TechStackLearningHub.Web.Admin
 
         private void BindGrid()
         {
-            grdCourses.DataSource = _courseService.GetAllCoursesForAdmin();
+            grdCourses.DataSource = _courseBLL.GetAllCoursesForAdmin();
             grdCourses.DataBind();
         }
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
+            AuthBLL.RequireAdmin();
+
             try
             {
                 int courseId;
                 if (int.TryParse(hidCourseId.Value, out courseId) && courseId > 0)
                 {
-                    Course course = _courseService.GetCourseForAdminEdit(courseId);
+                    Course course = _courseBLL.GetCourseForAdminEdit(courseId);
                     course.CourseName = txtCourseName.Text.Trim();
                     course.TechStack = ddlTechStack.SelectedValue;
                     course.Description = txtDescription.Text.Trim();
-                    _courseService.UpdateCourse(course);
+                    _courseBLL.UpdateCourse(course);
                 }
                 else
                 {
-                    _courseService.CreateCourse(new Course
+                    _courseBLL.CreateCourse(new Course
                     {
                         CourseName = txtCourseName.Text.Trim(),
                         TechStack = ddlTechStack.SelectedValue,
@@ -58,9 +61,9 @@ namespace TechStackLearningHub.Web.Admin
                 ResetEditor(null);
                 BindGrid();
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex)
             {
-                ShowError(ex.Message);
+                ShowError(ex, "ManageCourses.btnSave");
             }
         }
 
@@ -71,6 +74,8 @@ namespace TechStackLearningHub.Web.Admin
 
         protected void grdCourses_RowCommand(object sender, GridViewCommandEventArgs e)
         {
+            AuthBLL.RequireAdmin();
+
             int courseId;
             if (!int.TryParse(e.CommandArgument as string, out courseId))
                 return;
@@ -83,16 +88,16 @@ namespace TechStackLearningHub.Web.Admin
                         StartEdit(courseId);
                         break;
                     case "TogglePublish":
-                        Course course = _courseService.GetCourseForAdminEdit(courseId);
+                        Course course = _courseBLL.GetCourseForAdminEdit(courseId);
                         if (course == null)
                             return;
                         if (!course.IsPublished)
-                            _courseService.PublishCourse(courseId);
+                            _courseBLL.PublishCourse(courseId);
                         else
-                            _courseService.UnpublishCourse(courseId);
+                            _courseBLL.UnpublishCourse(courseId);
                         break;
                     case "DeleteCourse":
-                        _courseService.DeleteCourse(courseId);
+                        _courseBLL.DeleteCourse(courseId);
                         break;
                     case "ManageModules":
                         Response.Redirect("ManageModules.aspx?CourseID=" + courseId);
@@ -100,16 +105,21 @@ namespace TechStackLearningHub.Web.Admin
                 }
                 BindGrid();
             }
-            catch (InvalidOperationException ex)
+            catch (ThreadAbortException)
             {
-                ShowError(ex.Message);
+                // The ManageModules command redirects out; that is a success.
+                throw;
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex, "ManageCourses.grdCourses_RowCommand");
                 BindGrid();
             }
         }
 
         private void StartEdit(int courseId)
         {
-            Course course = _courseService.GetCourseForAdminEdit(courseId);
+            Course course = _courseBLL.GetCourseForAdminEdit(courseId);
             if (course == null)
                 return;
 
@@ -134,10 +144,25 @@ namespace TechStackLearningHub.Web.Admin
             lblMessage.Visible = false;
         }
 
-        private void ShowError(string message)
+        // A ValidationException is authored for the admin, so its text is safe
+        // to render. Every other exception is a fault: it is logged, and the
+        // admin gets a fixed message instead of whatever the exception said.
+        // The previous code caught InvalidOperationException, which the BLL no
+        // longer throws - validation failures would have escaped as unhandled
+        // error pages instead of inline messages.
+        private void ShowError(Exception ex, string context)
         {
             lblMessage.CssClass = "text-danger d-block mt-2";
-            lblMessage.Text = HttpUtility.HtmlEncode(message);
+            var validation = ex as ValidationException;
+            if (validation != null)
+            {
+                lblMessage.Text = HttpUtility.HtmlEncode(validation.Message);
+            }
+            else
+            {
+                ErrorLogger.Log(ex, context);
+                lblMessage.Text = "The course could not be saved. Please try again.";
+            }
             lblMessage.Visible = true;
         }
     }

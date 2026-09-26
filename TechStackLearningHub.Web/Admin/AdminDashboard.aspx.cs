@@ -1,34 +1,41 @@
 using System;
-using System.Data;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using TechStackLearningHub.BLL;
+using TechStackLearningHub.Web.BLL;
+using TechStackLearningHub.Web.Models;
 
 namespace TechStackLearningHub.Web.Admin
 {
     public partial class AdminDashboard : Page
     {
-        private readonly CourseService _courseService = new CourseService();
-        private readonly UserService _userService = new UserService();
-        private readonly ResultService _resultService = new ResultService();
+        private readonly CourseBLL _courseBLL = new CourseBLL();
+        private readonly UserBLL _userBLL = new UserBLL();
+        private readonly ResultBLL _resultBLL = new ResultBLL();
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            RoleGuard.RequireAdmin(this);
-
+            // Admin.Master.Page_Init already enforced admin-only access before
+            // any postback event ran, so this page needs no guard of its own.
             if (IsPostBack)
                 return;
 
-            litPublishedCourses.Text = _courseService.GetPublishedCourseCount().ToString();
-            litActiveStudents.Text = _userService.GetActiveStudentCount().ToString();
-            litAttemptsWeek.Text = _resultService.GetAttemptCountSince(DateTime.Today.AddDays(-7)).ToString();
+            litPublishedCourses.Text = _courseBLL.GetPublishedCourseCount().ToString();
+            litActiveStudents.Text = _userBLL.GetActiveStudentCount().ToString();
+            litAttemptsWeek.Text = _resultBLL.GetAttemptCountSince(DateTime.Today.AddDays(-7)).ToString();
 
-            DataTable users = _userService.GetAllUsersForAdmin();
-            litTotalUsers.Text = users.Rows.Count.ToString();
+            List<User> users = _userBLL.GetAllUsersForAdmin();
+            litTotalUsers.Text = users.Count.ToString();
 
-            DataTable recent = _resultService.GetAllResultsForReporting(null);
-            grdRecent.DataSource = recent.Rows.Cast<DataRow>().Take(10).CopyToDataTable();
+            // Take(10) on the typed list, not Take(10).CopyToDataTable():
+            // CopyToDataTable throws on an empty sequence, so an empty results
+            // table would have crashed this page instead of just rendering an
+            // empty grid. A List<T> has no such failure mode.
+            List<ResultReportRow> recent = _resultBLL.GetAllResultsForReporting(null)
+                .Take(10)
+                .ToList();
+            grdRecent.DataSource = recent;
             grdRecent.DataBind();
         }
     }

@@ -1,4 +1,4 @@
-<%@ Page Title="Manage Modules" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ManageModules.aspx.cs" Inherits="TechStackLearningHub.Web.Admin.ManageModules" %>
+<%@ Page Title="Manage Modules" Language="C#" MasterPageFile="~/Masterpages/Admin.Master" AutoEventWireup="true" CodeBehind="ManageModules.aspx.cs" Inherits="TechStackLearningHub.Web.Admin.ManageModules" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <h1>Manage Modules</h1>

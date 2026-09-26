@@ -1,22 +1,21 @@
 using System;
-using System.Data;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using TechStackLearningHub.BLL;
-using TechStackLearningHub.DAL.Models;
+using TechStackLearningHub.Web.BLL;
+using TechStackLearningHub.Web.Helpers;
+using TechStackLearningHub.Web.Models;
 
 namespace TechStackLearningHub.Web.Admin
 {
     public partial class ManageQuizzes : Page
     {
-        private readonly CourseService _courseService = new CourseService();
-        private readonly ModuleService _moduleService = new ModuleService();
-        private readonly QuizService _quizService = new QuizService();
+        private readonly CourseBLL _courseBLL = new CourseBLL();
+        private readonly ModuleBLL _moduleBLL = new ModuleBLL();
+        private readonly QuizBLL _quizBLL = new QuizBLL();
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            RoleGuard.RequireAdmin(this);
 
             if (!IsPostBack)
             {
@@ -44,11 +43,11 @@ namespace TechStackLearningHub.Web.Admin
         {
             ddlCourse.Items.Clear();
             ddlCourse.Items.Add(new ListItem("-- choose a course --", ""));
-            foreach (DataRow row in _courseService.GetAllCoursesForAdmin().Rows)
+            foreach (Course course in _courseBLL.GetAllCoursesForAdmin())
             {
                 ddlCourse.Items.Add(new ListItem(
-                    string.Format("{0} ({1})", row["CourseName"], row["TechStack"]),
-                    row["CourseID"].ToString()));
+                    string.Format("{0} ({1})", course.CourseName, course.TechStack),
+                    course.CourseID.ToString()));
             }
         }
 
@@ -59,9 +58,9 @@ namespace TechStackLearningHub.Web.Admin
             int courseId;
             if (int.TryParse(ddlCourse.SelectedValue, out courseId) && courseId > 0)
             {
-                foreach (DataRow row in _moduleService.GetModulesForCourse(courseId).Rows)
+                foreach (Module module in _moduleBLL.GetModulesForCourse(courseId))
                 {
-                    ddlModule.Items.Add(new ListItem(row["ModuleTitle"].ToString(), row["ModuleID"].ToString()));
+                    ddlModule.Items.Add(new ListItem(module.ModuleTitle, module.ModuleID.ToString()));
                 }
             }
         }
@@ -95,7 +94,7 @@ namespace TechStackLearningHub.Web.Admin
             }
 
             pnlWorkspace.Visible = true;
-            Quiz quiz = _quizService.GetQuizForModuleId(CurrentModuleId);
+            Quiz quiz = _quizBLL.GetQuizForModuleId(CurrentModuleId);
             lnkManageQuestions.NavigateUrl = quiz == null
                 ? "#"
                 : HttpUtility.HtmlAttributeEncode("ManageQuestions.aspx?QuizID=" + quiz.QuizID);
@@ -120,37 +119,57 @@ namespace TechStackLearningHub.Web.Admin
 
         protected void btnSaveQuiz_Click(object sender, EventArgs e)
         {
+            AuthBLL.RequireAdmin();
+
             try
             {
                 int passMark = int.Parse(txtPassMark.Text.Trim());
                 int quizId;
                 if (int.TryParse(hidQuizId.Value, out quizId) && quizId > 0)
-                    _quizService.UpdateQuiz(quizId, txtQuizTitle.Text.Trim(), passMark);
+                    _quizBLL.UpdateQuiz(quizId, txtQuizTitle.Text.Trim(), passMark);
                 else
-                    _quizService.CreateQuiz(CurrentModuleId, txtQuizTitle.Text.Trim(), passMark);
+                    _quizBLL.CreateQuiz(CurrentModuleId, txtQuizTitle.Text.Trim(), passMark);
                 LoadWorkspace();
             }
             catch (Exception ex)
             {
-                lblMessage.Text = HttpUtility.HtmlEncode(ex.Message);
-                lblMessage.Visible = true;
+                ShowError(ex, "ManageQuizzes.btnSave");
             }
         }
 
         protected void btnDeleteQuiz_Click(object sender, EventArgs e)
         {
+            AuthBLL.RequireAdmin();
+
             try
             {
                 int quizId;
                 if (int.TryParse(hidQuizId.Value, out quizId) && quizId > 0)
-                    _quizService.DeleteQuiz(quizId);
+                    _quizBLL.DeleteQuiz(quizId);
                 LoadWorkspace();
             }
             catch (Exception ex)
             {
-                lblMessage.Text = HttpUtility.HtmlEncode(ex.Message);
-                lblMessage.Visible = true;
+                ShowError(ex, "ManageQuizzes.btnDelete");
             }
+        }
+
+        // ValidationException text is authored for the admin and safe to show.
+        // Anything else gets logged instead, so a SQL or connection-string
+        // fragment can never reach the rendered page.
+        private void ShowError(Exception ex, string context)
+        {
+            var validation = ex as ValidationException;
+            if (validation != null)
+            {
+                lblMessage.Text = HttpUtility.HtmlEncode(validation.Message);
+            }
+            else
+            {
+                ErrorLogger.Log(ex, context);
+                lblMessage.Text = "The quiz could not be saved. Please try again.";
+            }
+            lblMessage.Visible = true;
         }
     }
 }

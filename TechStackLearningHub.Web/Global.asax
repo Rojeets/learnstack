@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="learnstack.Global" Language="C#" %>
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="TechStackLearningHub.Web.Global" Language="C#" %>

@@ -1,19 +1,18 @@
 using System;
-using System.Data;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using TechStackLearningHub.BLL;
+using TechStackLearningHub.Web.BLL;
+using TechStackLearningHub.Web.Helpers;
 
 namespace TechStackLearningHub.Web.Admin
 {
     public partial class ManageUsers : Page
     {
-        private readonly UserService _userService = new UserService();
+        private readonly UserBLL _userBLL = new UserBLL();
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            RoleGuard.RequireAdmin(this);
 
             if (!IsPostBack)
                 BindGrid();
@@ -21,31 +20,33 @@ namespace TechStackLearningHub.Web.Admin
 
         private void BindGrid()
         {
-            grdUsers.DataSource = _userService.GetAllUsersForAdmin();
+            grdUsers.DataSource = _userBLL.GetAllUsersForAdmin();
             grdUsers.DataBind();
         }
 
         protected void grdUsers_RowCommand(object sender, GridViewCommandEventArgs e)
         {
+            AuthBLL.RequireAdmin();
+
             int userId;
             if (!int.TryParse(e.CommandArgument as string, out userId))
                 return;
 
             try
             {
-                int me = (int)Session["UserID"];
+                int me = AuthBLL.CurrentUserId;
                 switch (e.CommandName)
                 {
                     case "ToggleActive":
                         ToggleActive(userId, me);
                         break;
                     case "MakeAdmin":
-                        _userService.ChangeUserRole(userId, "Admin");
+                        _userBLL.ChangeUserRole(userId, "Admin");
                         break;
                     case "MakeStudent":
                         if (userId == me)
-                            throw new InvalidOperationException("You cannot demote your own account.");
-                        _userService.ChangeUserRole(userId, "Student");
+                            throw new ValidationException("You cannot demote your own account.");
+                        _userBLL.ChangeUserRole(userId, "Student");
                         break;
                 }
                 lblMessage.Visible = false;
@@ -53,8 +54,7 @@ namespace TechStackLearningHub.Web.Admin
             }
             catch (Exception ex)
             {
-                lblMessage.Text = HttpUtility.HtmlEncode(ex.Message);
-                lblMessage.Visible = true;
+                ShowError(ex);
             }
         }
 
@@ -73,15 +73,32 @@ namespace TechStackLearningHub.Web.Admin
                     // Never let a single admin deactivate their own account and
                     // lock the app out of administration.
                     if (userId == me)
-                        throw new InvalidOperationException("You cannot deactivate your own account.");
-                    _userService.DeactivateUser(userId);
+                        throw new ValidationException("You cannot deactivate your own account.");
+                    _userBLL.DeactivateUser(userId);
                 }
                 else
                 {
-                    _userService.ActivateUser(userId);
+                    _userBLL.ActivateUser(userId);
                 }
                 return;
             }
+        }
+
+        // ValidationException text is authored for the admin and safe to show;
+        // anything else is logged rather than rendered.
+        private void ShowError(Exception ex)
+        {
+            var validation = ex as ValidationException;
+            if (validation != null)
+            {
+                lblMessage.Text = HttpUtility.HtmlEncode(validation.Message);
+            }
+            else
+            {
+                ErrorLogger.Log(ex, "ManageUsers.grdUsers_RowCommand");
+                lblMessage.Text = "The user could not be updated. Please try again.";
+            }
+            lblMessage.Visible = true;
         }
     }
 }
