@@ -10,8 +10,13 @@ namespace TechStackLearningHub.Web
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
+            // No AutoRedirectMode here on purpose. RedirectMode.Permanent made every
+            // ".aspx" request answer 301 with the extensionless URL, which (a) cost a
+            // round trip per page, (b) silently dropped form POST bodies aimed at a
+            // ".aspx" URL, so the login button only worked after the redirect, and
+            // (c) rewrote FormsAuthentication returnUrl values. Friendly URLs stay
+            // available for extensionless requests, they just stop redirecting.
             var settings = new FriendlyUrlSettings();
-            settings.AutoRedirectMode = RedirectMode.Permanent;
             routes.EnableFriendlyUrls(settings);
         }
     }

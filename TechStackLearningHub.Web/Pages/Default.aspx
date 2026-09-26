@@ -7,8 +7,8 @@
             <h1 class="display-5 fw-bold">Learn your stack.</h1>
             <p class="lead">A role-based e-learning hub for ASP.NET, React, Python, Java, Node.js, PHP/Laravel, Android (Kotlin) and Flutter.</p>
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                <a class="btn btn-primary btn-lg px-4" href="~/Account/Register.aspx">Create an account</a>
-                <a class="btn btn-outline-secondary btn-lg px-4" href="~/Account/Login.aspx">Log in</a>
+                <a class="btn btn-primary btn-lg px-4" href="<%= ResolveUrl("~/Account/Register.aspx") %>">Create an account</a>
+                <a class="btn btn-outline-secondary btn-lg px-4" href="<%= ResolveUrl("~/Account/Login.aspx") %>">Log in</a>
             </div>
         </div>
     </div>

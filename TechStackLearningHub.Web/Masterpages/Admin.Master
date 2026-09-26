@@ -6,32 +6,32 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%: Page.Title %> - Admin - TechStack Learning Hub</title>
-    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/Content/Site.css" />
-    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/Content/bootstrap.min.css") %>" />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/Content/Site.css") %>" />
+    <link href="<%= ResolveUrl("~/favicon.ico") %>" rel="shortcut icon" type="image/x-icon" />
 </head>
 <body class="bg-light">
     <form runat="server">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
-                <a class="navbar-brand fw-bold" href="~/Admin/AdminDashboard.aspx">TechStack Admin</a>
+                <a class="navbar-brand fw-bold" href="<%= ResolveUrl("~/Admin/AdminDashboard.aspx") %>">TechStack Admin</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav" aria-controls="adminNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="adminNav">
                     <ul class="navbar-nav me-auto">
-                        <li class="nav-item"><a class="nav-link" href="~/Admin/AdminDashboard.aspx">Dashboard</a></li>
-                        <li class="nav-item"><a class="nav-link" href="~/Admin/ManageCourses.aspx">Courses</a></li>
-                        <li class="nav-item"><a class="nav-link" href="~/Admin/ManageModules.aspx">Modules</a></li>
-                        <li class="nav-item"><a class="nav-link" href="~/Admin/ManageLessons.aspx">Lessons</a></li>
-                        <li class="nav-item"><a class="nav-link" href="~/Admin/ManageQuizzes.aspx">Quizzes</a></li>
-                        <li class="nav-item"><a class="nav-link" href="~/Admin/ManageQuestions.aspx">Questions</a></li>
-                        <li class="nav-item"><a class="nav-link" href="~/Admin/ManageUsers.aspx">Users</a></li>
-                        <li class="nav-item"><a class="nav-link" href="~/Admin/Reports.aspx">Reports</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Admin/AdminDashboard.aspx") %>">Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Admin/ManageCourses.aspx") %>">Courses</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Admin/ManageModules.aspx") %>">Modules</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Admin/ManageLessons.aspx") %>">Lessons</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Admin/ManageQuizzes.aspx") %>">Quizzes</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Admin/ManageQuestions.aspx") %>">Questions</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Admin/ManageUsers.aspx") %>">Users</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Admin/Reports.aspx") %>">Reports</a></li>
                     </ul>
                     <ul class="navbar-nav">
                         <li class="nav-item"><span class="navbar-text me-3"><asp:Literal ID="litAdminName" runat="server" /></span></li>
-                        <li class="nav-item"><a class="nav-link" href="~/Member/Dashboard.aspx">Student view</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<%= ResolveUrl("~/Member/Dashboard.aspx") %>">Student view</a></li>
                         <li class="nav-item">
                             <asp:LinkButton ID="btnAdminLogout" runat="server" CssClass="nav-link" OnClick="btnAdminLogout_Click" Text="Logout" />
                         </li>
@@ -45,6 +45,6 @@
             </asp:ContentPlaceHolder>
         </div>
     </form>
-    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <script src="<%= ResolveUrl("~/Scripts/bootstrap.bundle.min.js") %>"></script>
 </body>
 </html>
