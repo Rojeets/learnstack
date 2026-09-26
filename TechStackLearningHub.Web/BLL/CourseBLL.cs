@@ -1,0 +1,132 @@
+using System;
+using System.Collections.Generic;
+using TechStackLearningHub.Data_Access_Layer;
+using TechStackLearningHub.Helpers;
+using TechStackLearningHub.Models;
+
+namespace TechStackLearningHub.BLL
+{
+    public class CourseBLL
+    {
+        // The fixed TechStack labels surfaced in the admin dropdown and used to
+        // validate course creation. Matches the catalogue filter options.
+        public static readonly string[] KnownTechStacks =
+        {
+            "ASP.NET", "React", "Python", "Java", "Node.js",
+            "PHP/Laravel", "Android (Kotlin)", "Flutter"
+        };
+
+        private readonly CourseDAL _courseDAL = new CourseDAL();
+        private readonly ModuleDAL _moduleDAL = new ModuleDAL();
+        private readonly ModuleBLL _moduleBLL = new ModuleBLL();
+
+        public List<Course> GetCatalogueForStudents(string techStackFilter = null)
+        {
+            List<Course> courses = _courseDAL.SelectPublishedCourses();
+
+            // ModuleCount is a computed property, not a column, so the DAL
+            // cannot select it. Filling it in here keeps that concern out of
+            // the SQL and means one query per course is acceptable - the
+            // catalogue is small and admin-authored.
+            foreach (Course course in courses)
+            {
+                course.ModuleCount = _moduleDAL.GetCountByCourseId(course.CourseID);
+            }
+
+            if (string.IsNullOrEmpty(techStackFilter))
+                return courses;
+
+            // Filtered with an ordinal comparison on the typed list. The
+            // earlier DataTable version had to avoid DataTable.Select's filter
+            // string precisely because that value would have been parsed as
+            // filter-expression syntax; with a List<Course> the value can only
+            // ever be compared, never interpreted.
+            var filtered = new List<Course>();
+            foreach (Course course in courses)
+            {
+                if (string.Equals(course.TechStack, techStackFilter,
+                        StringComparison.OrdinalIgnoreCase))
+                {
+                    filtered.Add(course);
+                }
+            }
+            return filtered;
+        }
+
+        public Course GetCourseForAdminEdit(int courseId)
+        {
+            return _courseDAL.SelectById(courseId);
+        }
+
+        // Student-facing lookup: null unless the course is published, so a
+        // hand-typed URL can never open a draft course.
+        public Course GetPublishedCourse(int courseId)
+        {
+            Course course = _courseDAL.SelectById(courseId);
+            if (course == null || !course.IsPublished)
+                return null;
+            return course;
+        }
+
+        public int CreateCourse(Course course)
+        {
+            ValidateCourse(course);
+            return _courseDAL.Insert(course);
+        }
+
+        public void UpdateCourse(Course course)
+        {
+            ValidateCourse(course);
+            _courseDAL.Update(course);
+        }
+
+        public void PublishCourse(int courseId)
+        {
+            if (!_moduleBLL.CourseHasContent(courseId))
+                throw new ValidationException(
+                    "This course has no content yet. Add at least one module with one lesson before publishing.");
+            _courseDAL.SetPublishStatus(courseId, true);
+        }
+
+        public void UnpublishCourse(int courseId)
+        {
+            _courseDAL.SetPublishStatus(courseId, false);
+        }
+
+        public List<Course> GetAllCoursesForAdmin()
+        {
+            return _courseDAL.SelectAllForAdmin();
+        }
+
+        public void DeleteCourse(int courseId)
+        {
+            _courseDAL.Delete(courseId);
+        }
+
+        public int GetPublishedCourseCount()
+        {
+            return _courseDAL.GetPublishedCourseCount();
+        }
+
+        private void ValidateCourse(Course course)
+        {
+            if (course == null)
+                throw new ValidationException("Course not supplied.");
+
+            if (string.IsNullOrWhiteSpace(course.CourseName))
+                throw new ValidationException("Course name is required.");
+
+            bool known = false;
+            foreach (string stack in KnownTechStacks)
+            {
+                if (string.Equals(stack, course.TechStack, StringComparison.OrdinalIgnoreCase))
+                {
+                    known = true;
+                    break;
+                }
+            }
+            if (!known)
+                throw new ValidationException("TechStack must be one of the known labels.");
+        }
+    }
+}

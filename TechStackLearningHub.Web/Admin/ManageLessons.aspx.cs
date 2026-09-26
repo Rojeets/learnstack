@@ -1,26 +1,25 @@
 using System;
-using System.Data;
 using System.IO;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using TechStackLearningHub.BLL;
-using TechStackLearningHub.DAL.Models;
+using TechStackLearningHub.Helpers;
+using TechStackLearningHub.Models;
 
 namespace TechStackLearningHub.Web.Admin
 {
     public partial class ManageLessons : Page
     {
-        private readonly CourseService _courseService = new CourseService();
-        private readonly ModuleService _moduleService = new ModuleService();
-        private readonly LessonService _lessonService = new LessonService();
+        private readonly CourseBLL _courseBLL = new CourseBLL();
+        private readonly ModuleBLL _moduleBLL = new ModuleBLL();
+        private readonly LessonBLL _lessonBLL = new LessonBLL();
 
         private static readonly string[] AllowedNoteExtensions = { ".pdf", ".docx", ".doc", ".txt" };
         private const long MaxNoteBytes = 5 * 1024 * 1024;
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            RoleGuard.RequireAdmin(this);
 
             if (!IsPostBack)
             {
@@ -33,11 +32,11 @@ namespace TechStackLearningHub.Web.Admin
         {
             ddlCourse.Items.Clear();
             ddlCourse.Items.Add(new ListItem("-- choose a course --", ""));
-            foreach (DataRow row in _courseService.GetAllCoursesForAdmin().Rows)
+            foreach (Course course in _courseBLL.GetAllCoursesForAdmin())
             {
                 ddlCourse.Items.Add(new ListItem(
-                    string.Format("{0} ({1})", row["CourseName"], row["TechStack"]),
-                    row["CourseID"].ToString()));
+                    string.Format("{0} ({1})", course.CourseName, course.TechStack),
+                    course.CourseID.ToString()));
             }
 
             int courseId;
@@ -66,9 +65,9 @@ namespace TechStackLearningHub.Web.Admin
             int courseId;
             if (int.TryParse(ddlCourse.SelectedValue, out courseId) && courseId > 0)
             {
-                foreach (DataRow row in _moduleService.GetModulesForCourse(courseId).Rows)
+                foreach (Module module in _moduleBLL.GetModulesForCourse(courseId))
                 {
-                    ddlModule.Items.Add(new ListItem(row["ModuleTitle"].ToString(), row["ModuleID"].ToString()));
+                    ddlModule.Items.Add(new ListItem(module.ModuleTitle, module.ModuleID.ToString()));
                 }
             }
         }
@@ -103,12 +102,19 @@ namespace TechStackLearningHub.Web.Admin
                 return;
             }
             pnlWorkspace.Visible = true;
-            grdLessons.DataSource = _lessonService.GetLessonsForModule(CurrentModuleId);
+            grdLessons.DataSource = _lessonBLL.GetLessonsForModule(CurrentModuleId);
             grdLessons.DataBind();
         }
 
         protected void grdLessons_RowCommand(object sender, GridViewCommandEventArgs e)
         {
+            // Postback handlers run before Page_Load, so each one that writes
+            // has to re-assert admin rights itself. Admin.Master.Page_Init stops
+            // the request before the handler is ever reached, but defence in
+            // depth here means no future refactor of the master can silently
+            // turn this page into an open write endpoint.
+            AuthBLL.RequireAdmin();
+
             int lessonId;
             if (!int.TryParse(e.CommandArgument as string, out lessonId))
                 return;
@@ -119,7 +125,7 @@ namespace TechStackLearningHub.Web.Admin
                     BeginEdit(lessonId);
                     break;
                 case "DeleteLesson":
-                    _lessonService.DeleteLesson(lessonId);
+                    _lessonBLL.DeleteLesson(lessonId);
                     ResetEditor();
                     LoadWorkspace();
                     break;
@@ -128,7 +134,7 @@ namespace TechStackLearningHub.Web.Admin
 
         private void BeginEdit(int lessonId)
         {
-            Lesson lesson = _lessonService.GetLessonDetail(lessonId);
+            Lesson lesson = _lessonBLL.GetLessonDetail(lessonId);
             if (lesson == null)
                 return;
 
@@ -146,6 +152,8 @@ namespace TechStackLearningHub.Web.Admin
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
+            AuthBLL.RequireAdmin();
+
             try
             {
                 string notesPath = SaveUploadedNotes();
@@ -153,9 +161,19 @@ namespace TechStackLearningHub.Web.Admin
                 ResetEditor();
                 LoadWorkspace();
             }
+            catch (ValidationException ex)
+            {
+                // Authored, user-facing text - safe to render verbatim.
+                lblMessage.Text = HttpUtility.HtmlEncode(ex.Message);
+                lblMessage.Visible = true;
+            }
             catch (Exception ex)
             {
-                lblMessage.Text = HttpUtility.HtmlEncode(ex.Message);
+                // Anything else is a fault, not feedback. A dead connection or
+                // a constraint violation must not leak its message (and with it
+                // the connection string) into the page source.
+                ErrorLogger.Log(ex, "ManageLessons.btnSave");
+                lblMessage.Text = "The lesson could not be saved. Please try again.";
                 lblMessage.Visible = true;
             }
         }
@@ -167,9 +185,9 @@ namespace TechStackLearningHub.Web.Admin
 
             string extension = Path.GetExtension(fupNotes.FileName).ToLowerInvariant();
             if (Array.IndexOf(AllowedNoteExtensions, extension) < 0)
-                throw new InvalidOperationException("Notes file must be a PDF, DOCX, DOC or TXT file.");
+                throw new ValidationException("Notes file must be a PDF, DOCX, DOC or TXT file.");
             if (fupNotes.PostedFile.ContentLength > MaxNoteBytes)
-                throw new InvalidOperationException("Notes file must be 5 MB or smaller.");
+                throw new ValidationException("Notes file must be 5 MB or smaller.");
 
             string folder = Server.MapPath("~/UploadedNotes");
             Directory.CreateDirectory(folder);
@@ -183,17 +201,17 @@ namespace TechStackLearningHub.Web.Admin
             int lessonId;
             if (int.TryParse(hidLessonId.Value, out lessonId) && lessonId > 0)
             {
-                Lesson lesson = _lessonService.GetLessonDetail(lessonId);
+                Lesson lesson = _lessonBLL.GetLessonDetail(lessonId);
                 lesson.LessonTitle = txtLessonTitle.Text.Trim();
                 lesson.ContentHTML = txtContentHtml.Text.Trim();
                 lesson.VideoUrl = txtVideoUrl.Text.Trim();
                 if (newNotesPath != null)
                     lesson.NotesFilePath = newNotesPath;
-                _lessonService.UpdateLessonContent(lesson);
+                _lessonBLL.UpdateLessonContent(lesson);
             }
             else
             {
-                _lessonService.AddLessonToModule(new Lesson
+                _lessonBLL.AddLessonToModule(new Lesson
                 {
                     ModuleID = CurrentModuleId,
                     LessonTitle = txtLessonTitle.Text.Trim(),

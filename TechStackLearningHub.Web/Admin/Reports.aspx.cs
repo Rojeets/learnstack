@@ -1,30 +1,28 @@
 using System;
-using System.Data;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using TechStackLearningHub.BLL;
-using TechStackLearningHub.DAL.Models;
+using TechStackLearningHub.Models;
 
 namespace TechStackLearningHub.Web.Admin
 {
     public partial class Reports : Page
     {
-        private readonly CourseService _courseService = new CourseService();
-        private readonly ResultService _resultService = new ResultService();
-        private readonly ProgressService _progressService = new ProgressService();
+        private readonly CourseBLL _courseBLL = new CourseBLL();
+        private readonly ResultBLL _resultBLL = new ResultBLL();
+        private readonly ProgressBLL _progressBLL = new ProgressBLL();
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            RoleGuard.RequireAdmin(this);
 
             if (!IsPostBack)
             {
                 ddlCourse.Items.Add(new ListItem("All courses", ""));
-                foreach (DataRow row in _courseService.GetAllCoursesForAdmin().Rows)
+                foreach (Course course in _courseBLL.GetAllCoursesForAdmin())
                 {
                     ddlCourse.Items.Add(new ListItem(
-                        string.Format("{0} ({1})", row["CourseName"], row["TechStack"]),
-                        row["CourseID"].ToString()));
+                        string.Format("{0} ({1})", course.CourseName, course.TechStack),
+                        course.CourseID.ToString()));
                 }
                 BindReports();
             }
@@ -42,12 +40,12 @@ namespace TechStackLearningHub.Web.Admin
                 ? courseId
                 : (int?)null;
 
-            grdResults.DataSource = _resultService.GetAllResultsForReporting(filter);
+            grdResults.DataSource = _resultBLL.GetAllResultsForReporting(filter);
             grdResults.DataBind();
 
             if (filter.HasValue)
             {
-                grdProgress.DataSource = _progressService.GetProgressSummariesForReporting(filter.Value);
+                grdProgress.DataSource = _progressBLL.GetProgressSummariesForReporting(filter.Value);
                 grdProgress.DataBind();
                 pnlProgress.Visible = true;
             }

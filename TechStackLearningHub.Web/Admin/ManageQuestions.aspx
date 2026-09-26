@@ -1,4 +1,4 @@
-<%@ Page Title="Manage Questions" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ManageQuestions.aspx.cs" Inherits="TechStackLearningHub.Web.Admin.ManageQuestions" %>
+<%@ Page Title="Manage Questions" Language="C#" MasterPageFile="~/Masterpages/Admin.Master" AutoEventWireup="true" CodeBehind="ManageQuestions.aspx.cs" Inherits="TechStackLearningHub.Web.Admin.ManageQuestions" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <h1>Manage Questions</h1>

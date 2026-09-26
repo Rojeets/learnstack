@@ -1,22 +1,21 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using TechStackLearningHub.BLL;
-using TechStackLearningHub.DAL.Models;
+using TechStackLearningHub.Helpers;
+using TechStackLearningHub.Models;
 
 namespace TechStackLearningHub.Web.Admin
 {
     public partial class ManageQuestions : Page
     {
-        private readonly QuizService _quizService = new QuizService();
-        private readonly QuestionService _questionService = new QuestionService();
+        private readonly QuizBLL _quizBLL = new QuizBLL();
+        private readonly QuestionBLL _questionBLL = new QuestionBLL();
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            RoleGuard.RequireAdmin(this);
 
             if (!IsPostBack)
             {
@@ -37,11 +36,11 @@ namespace TechStackLearningHub.Web.Admin
         {
             ddlQuiz.Items.Clear();
             ddlQuiz.Items.Add(new ListItem("-- choose a quiz --", ""));
-            foreach (DataRow row in _quizService.GetAllQuizzesForAdmin().Rows)
+            foreach (QuizListItem quiz in _quizBLL.GetAllQuizzesForAdmin())
             {
                 ddlQuiz.Items.Add(new ListItem(
-                    string.Format("{0} ({1} > {2})", row["QuizTitle"], row["CourseName"], row["ModuleTitle"]),
-                    row["QuizID"].ToString()));
+                    string.Format("{0} ({1} > {2})", quiz.QuizTitle, quiz.CourseName, quiz.ModuleTitle),
+                    quiz.QuizID.ToString()));
             }
         }
 
@@ -78,12 +77,14 @@ namespace TechStackLearningHub.Web.Admin
             }
 
             pnlWorkspace.Visible = true;
-            grdQuestions.DataSource = _questionService.GetQuestionsByQuizId(CurrentQuizId);
+            grdQuestions.DataSource = _questionBLL.GetQuestionsByQuizId(CurrentQuizId);
             grdQuestions.DataBind();
         }
 
         protected void grdQuestions_RowCommand(object sender, GridViewCommandEventArgs e)
         {
+            AuthBLL.RequireAdmin();
+
             int questionId;
             if (!int.TryParse(e.CommandArgument as string, out questionId))
                 return;
@@ -94,7 +95,7 @@ namespace TechStackLearningHub.Web.Admin
                     BeginEdit(questionId);
                     break;
                 case "DeleteQuestion":
-                    _questionService.DeleteQuestion(questionId);
+                    _questionBLL.DeleteQuestion(questionId);
                     ResetEditor();
                     LoadWorkspace();
                     break;
@@ -104,12 +105,12 @@ namespace TechStackLearningHub.Web.Admin
         private void BeginEdit(int questionId)
         {
             hidQuestionId.Value = questionId.ToString();
-            txtQuestionText.Text = _questionService.GetQuestionsByQuizId(CurrentQuizId)
+            txtQuestionText.Text = _questionBLL.GetQuestionsByQuizId(CurrentQuizId)
                 .Find(q => q.QuestionID == questionId).QuestionText;
-            txtMarks.Text = _questionService.GetQuestionsByQuizId(CurrentQuizId)
+            txtMarks.Text = _questionBLL.GetQuestionsByQuizId(CurrentQuizId)
                 .Find(q => q.QuestionID == questionId).Marks.ToString();
 
-            List<Answer> answers = _questionService.GetAnswerOptions(questionId);
+            List<Answer> answers = _questionBLL.GetAnswerOptions(questionId);
             rptAnswerRows.DataSource = answers;
             rptAnswerRows.DataBind();
 
@@ -120,6 +121,8 @@ namespace TechStackLearningHub.Web.Admin
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
+            AuthBLL.RequireAdmin();
+
             try
             {
                 var answers = new List<AnswerInput>();
@@ -137,7 +140,7 @@ namespace TechStackLearningHub.Web.Admin
                 int questionId;
                 if (int.TryParse(hidQuestionId.Value, out questionId) && questionId > 0)
                 {
-                    _questionService.UpdateQuestion(new Question
+                    _questionBLL.UpdateQuestion(new Question
                     {
                         QuestionID = questionId,
                         QuizID = CurrentQuizId,
@@ -147,16 +150,22 @@ namespace TechStackLearningHub.Web.Admin
                 }
                 else
                 {
-                    _questionService.AddQuestionToQuiz(CurrentQuizId, txtQuestionText.Text.Trim(),
+                    _questionBLL.AddQuestionToQuiz(CurrentQuizId, txtQuestionText.Text.Trim(),
                         int.Parse(txtMarks.Text.Trim()), answers);
                 }
 
                 ResetEditor();
                 LoadWorkspace();
             }
-            catch (Exception ex)
+            catch (ValidationException ex)
             {
                 lblMessage.Text = HttpUtility.HtmlEncode(ex.Message);
+                lblMessage.Visible = true;
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.Log(ex, "ManageQuestions.btnSave");
+                lblMessage.Text = "The question could not be saved. Please try again.";
                 lblMessage.Visible = true;
             }
         }
