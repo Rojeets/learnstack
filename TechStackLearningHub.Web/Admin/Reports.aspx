@@ -3,12 +3,12 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row mb-4">
         <div class="col-md-5">
-            <label class="form-label" for="ddlCourse">Filter by course</label>
+            <asp:Label runat="server" AssociatedControlID="ddlCourse" CssClass="form-label" Text="Filter by course" />
             <asp:DropDownList ID="ddlCourse" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddlCourse_SelectedIndexChanged" />
         </div>
     </div>
 
-    <h3>Quiz results</h3>
+    <h2 class="h5">Quiz results</h2>
     <asp:GridView ID="grdResults" runat="server" AutoGenerateColumns="false" CssClass="table table-hover mb-0" EmptyDataText="No quiz attempts for this filter.">
         <Columns>
             <asp:BoundField DataField="Username" HeaderText="Student" />
@@ -29,7 +29,7 @@
     </asp:GridView>
 
     <asp:Panel ID="pnlProgress" runat="server">
-        <h3>Course completion</h3>
+        <h2 class="h5">Course completion</h2>
         <asp:GridView ID="grdProgress" runat="server" AutoGenerateColumns="false" CssClass="table table-hover mb-0" EmptyDataText="No students have progress in this course yet.">
             <Columns>
                 <asp:BoundField DataField="Username" HeaderText="Student" />

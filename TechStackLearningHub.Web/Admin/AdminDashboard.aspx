@@ -75,8 +75,11 @@
                                             <span><%# Eval("TechStack") %></span>
                                             <span><%# Eval("CourseCount") %></span>
                                         </div>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-primary" role="progressbar" style='width: <%# GetPercent(Eval("PercentOfMax")) %>' aria-valuenow='<%# Eval("CourseCount") %>' aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress" role="progressbar"
+                                            aria-label='<%# GetStackBarLabel(Container.DataItem) %>'
+                                            aria-valuenow='<%# GetPercentNumber(Eval("PercentOfMax")) %>'
+                                            aria-valuemin="0" aria-valuemax="100">
+                                            <div class="progress-bar bg-primary" style='width: <%# GetPercent(Eval("PercentOfMax")) %>'></div>
                                         </div>
                                     </div>
                                 </ItemTemplate>

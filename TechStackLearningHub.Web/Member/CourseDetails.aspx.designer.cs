@@ -34,6 +34,13 @@ namespace TechStackLearningHub.Web.Member
         /// </summary>
         protected global::System.Web.UI.WebControls.Literal litDescription;
 
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlProgress;
+
+        /// <summary>
+        /// lblProgressSummary control.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Label lblProgressSummary;
+
         /// <summary>
         /// barProgress control.
         /// </summary>

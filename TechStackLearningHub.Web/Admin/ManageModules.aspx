@@ -3,7 +3,7 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row mb-3">
         <div class="col-md-5">
-            <label class="form-label" for="ddlCourse">Course</label>
+            <asp:Label runat="server" AssociatedControlID="ddlCourse" CssClass="form-label" Text="Course" />
             <asp:DropDownList ID="ddlCourse" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddlCourse_SelectedIndexChanged" />
         </div>
     </div>
@@ -22,8 +22,12 @@
                                 <asp:TemplateField HeaderText="Order">
                                     <ItemTemplate>
                                         <%# Eval("ModuleOrder") %>
-                                        <asp:LinkButton runat="server" Text="&#9650;" CommandName="MoveUp" CommandArgument='<%# Eval("ModuleID") %>' CssClass="btn btn-sm btn-link p-0 ms-2" />
-                                        <asp:LinkButton runat="server" Text="&#9660;" CommandName="MoveDown" CommandArgument='<%# Eval("ModuleID") %>' CssClass="btn btn-sm btn-link p-0" />
+                        <%-- The arrows alone announce as "black up-pointing
+                             triangle", so give each control a real name. --%>
+                        <asp:LinkButton runat="server" Text="&#9650;" CommandName="MoveUp" CommandArgument='<%# Eval("ModuleID") %>' CssClass="btn btn-sm btn-link p-0 ms-2"
+                            ToolTip='<%# "Move " + Eval("ModuleTitle") + " up" %>' />
+                        <asp:LinkButton runat="server" Text="&#9660;" CommandName="MoveDown" CommandArgument='<%# Eval("ModuleID") %>' CssClass="btn btn-sm btn-link p-0"
+                            ToolTip='<%# "Move " + Eval("ModuleTitle") + " down" %>' />
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:BoundField DataField="ModuleTitle" HeaderText="Title" />
@@ -45,7 +49,7 @@
                 <div class="card mb-3">
                     <div class="card-header">Add module</div>
                     <div class="card-body">
-                        <label class="form-label" for="txtModuleTitle">New module title</label>
+                        <asp:Label runat="server" AssociatedControlID="txtModuleTitle" CssClass="form-label" Text="New module title" />
                         <asp:TextBox ID="txtModuleTitle" runat="server" CssClass="form-control" />
                         <asp:RequiredFieldValidator runat="server" ControlToValidate="txtModuleTitle" ErrorMessage="Title is required." CssClass="text-danger" Display="Dynamic" />
                         <div class="mt-3">
@@ -56,7 +60,7 @@
 
                 <asp:Panel ID="pnlRename" runat="server" CssClass="card" Visible="false">
                     <div class="card-header">
-                        <h6 class="card-title mb-0">Rename module</h6>
+                        <h2 class="h6 card-title mb-0">Rename module</h2>
                     </div>
                     <div class="card-body">
                         <asp:HiddenField ID="hidRenameModuleId" runat="server" />
@@ -75,5 +79,5 @@
         </div>
     </asp:Panel>
 
-    <asp:Label ID="lblMessage" runat="server" CssClass="text-danger d-block mt-3" Visible="false" />
+    <asp:Label ID="lblMessage" runat="server" CssClass="text-danger d-block mt-3" Visible="false" role="alert" />
 </asp:Content>

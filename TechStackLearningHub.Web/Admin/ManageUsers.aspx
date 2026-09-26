@@ -29,5 +29,5 @@
         </Columns>
     </asp:GridView>
 
-    <asp:Label ID="lblMessage" runat="server" CssClass="text-danger" Visible="false" />
+    <asp:Label ID="lblMessage" runat="server" CssClass="text-danger" Visible="false" role="alert" />
 </asp:Content>

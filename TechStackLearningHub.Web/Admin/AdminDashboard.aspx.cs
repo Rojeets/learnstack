@@ -89,5 +89,52 @@ namespace TechStackLearningHub.Web.Admin
 
             return number.ToString("0.##", CultureInfo.InvariantCulture) + "%";
         }
+
+        /// <summary>
+        /// The same figure as <see cref="GetPercent"/> but as a bare number, for
+        /// aria-valuenow. The bar used to report its raw course count against a
+        /// maximum of 100, so a stack of 3 courses announced "3 out of 100"
+        /// instead of the share actually drawn.
+        /// </summary>
+        protected string GetPercentNumber(object value)
+        {
+            if (value == null || value == DBNull.Value)
+                return "0";
+
+            decimal number;
+            if (!decimal.TryParse(
+                    Convert.ToString(value, CultureInfo.InvariantCulture),
+                    NumberStyles.Number,
+                    CultureInfo.InvariantCulture,
+                    out number))
+            {
+                return "0";
+            }
+
+            if (number < 0m)
+                number = 0m;
+            else if (number > 100m)
+                number = 100m;
+
+            return number.ToString("0.##", CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// The accessible name for one tech-stack bar. A stack with a single
+        /// course needs the singular, otherwise it is announced as "1 courses".
+        /// </summary>
+        protected string GetStackBarLabel(object row)
+        {
+            var stack = row as TechStackCourseCount;
+            if (stack == null)
+                return string.Empty;
+
+            return string.Format(
+                CultureInfo.InvariantCulture,
+                "{0}: {1} {2}",
+                stack.TechStack,
+                stack.CourseCount,
+                stack.CourseCount == 1 ? "course" : "courses");
+        }
     }
 }

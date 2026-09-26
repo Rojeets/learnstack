@@ -6,6 +6,30 @@
     padding-right: 15px;
 }
 
+/* "Skip to main content" is the first tab stop. Bootstrap's
+   visually-hidden-focusable keeps it out of the way until it is focused, but
+   on the dark navbar it then needs its own contrast and placement. */
+.skip-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1080;
+    margin: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background-color: #fff;
+    color: #212529;
+    border: 2px solid #212529;
+    border-radius: 0.25rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* The skip target is a tabindex="-1" region, so it must not draw a focus ring
+   when clicked but should still be reachable by keyboard. */
+#mainContent:focus {
+    outline: none;
+}
+
 /* Set widths on the form inputs since otherwise they're 100% wide */
 input,
 select,

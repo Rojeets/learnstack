@@ -9,7 +9,7 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
-                        <h5 class="card-title"><%# Eval("CourseName") %></h5>
+                        <h2 class="h5 card-title"><%# Eval("CourseName") %></h2>
                         <span class="badge bg-primary"><%# Eval("TechStack") %></span>
                     </div>
                     <div class="progress" role="progressbar" aria-valuenow="<%# Eval("PercentComplete") %>" aria-valuemin="0" aria-valuemax="100">

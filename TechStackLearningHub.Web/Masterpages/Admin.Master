@@ -13,9 +13,10 @@
     <link href="<%= ResolveUrl("~/favicon.ico") %>" rel="shortcut icon" type="image/x-icon" />
 </head>
 <body class="admin-body">
+    <a class="visually-hidden-focusable skip-link" href="#mainContent">Skip to main content</a>
     <form runat="server">
         <div class="d-flex">
-            <nav class="admin-sidebar d-flex flex-column">
+            <nav class="admin-sidebar d-flex flex-column" aria-label="Admin">
                 <div class="sidebar-brand">TechStack Hub<span>Admin</span></div>
                 <ul class="nav flex-column">
                     <li><asp:HyperLink ID="navDashboard" runat="server" CssClass="nav-link" NavigateUrl="~/Admin/AdminDashboard.aspx"><i class="bi bi-speedometer2"></i>Dashboard</asp:HyperLink></li>
@@ -33,7 +34,10 @@
             </nav>
             <div class="admin-main">
                 <header class="admin-topbar d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0"><asp:Literal ID="litPageTitle" runat="server" /></h4>
+                    <%-- The admin pages dropped their own <h1> in the sidebar
+                         redesign, so this is the page's top-level heading. Every
+                         in-page heading is nested under it. --%>
+                    <h1 class="h4 mb-0"><asp:Literal ID="litPageTitle" runat="server" /></h1>
                     <div>
                         <span class="text-muted me-3">
                             <asp:Literal ID="litAdminName" runat="server" />
@@ -42,7 +46,7 @@
                             OnClick="btnAdminLogout_Click">Logout</asp:LinkButton>
                     </div>
                 </header>
-                <main class="admin-content p-4">
+                <main class="admin-content p-4" id="mainContent" tabindex="-1">
                     <asp:ContentPlaceHolder ID="MainContent" runat="server">
                     </asp:ContentPlaceHolder>
                 </main>

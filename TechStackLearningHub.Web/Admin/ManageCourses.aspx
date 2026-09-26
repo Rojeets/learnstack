@@ -41,25 +41,25 @@
         <div class="col-lg-4">
             <asp:Panel ID="pnlEditor" runat="server" CssClass="card">
                 <div class="card-header">
-                    <h5 class="card-title mb-0" id="lblEditorHeading" runat="server">New course</h5>
+                    <h2 class="h5 card-title mb-0" id="lblEditorHeading" runat="server">New course</h2>
                 </div>
                 <div class="card-body">
                     <asp:HiddenField ID="hidCourseId" runat="server" />
                     <div class="row g-3">
                         <div class="col-12">
-                            <label class="form-label" for="txtCourseName">Course name</label>
+                            <asp:Label runat="server" AssociatedControlID="txtCourseName" CssClass="form-label" Text="Course name" />
                             <asp:TextBox ID="txtCourseName" runat="server" CssClass="form-control" />
                         </div>
                         <div class="col-12">
-                            <label class="form-label" for="ddlTechStack">Tech stack</label>
+                            <asp:Label runat="server" AssociatedControlID="ddlTechStack" CssClass="form-label" Text="Tech stack" />
                             <asp:DropDownList ID="ddlTechStack" runat="server" CssClass="form-select" />
                         </div>
                         <div class="col-12">
-                            <label class="form-label" for="txtDescription">Description</label>
+                            <asp:Label runat="server" AssociatedControlID="txtDescription" CssClass="form-label" Text="Description" />
                             <asp:TextBox ID="txtDescription" runat="server" TextMode="MultiLine" Rows="3" CssClass="form-control" />
                         </div>
                     </div>
-                    <asp:Label ID="lblMessage" runat="server" CssClass="text-danger d-block mt-2" Visible="false" />
+                    <asp:Label ID="lblMessage" runat="server" CssClass="text-danger d-block mt-2" Visible="false" role="alert" />
                     <div class="mt-3">
                         <asp:Button ID="btnSave" runat="server" Text="Save course" CssClass="btn btn-primary" OnClick="btnSave_Click" />
                         <asp:Button ID="btnCancelEdit" runat="server" Text="Cancel" CssClass="btn btn-outline-secondary" OnClick="btnCancelEdit_Click" Visible="false" />

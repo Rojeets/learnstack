@@ -3,7 +3,7 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row g-3 mb-4">
         <div class="col-md-5">
-            <label class="form-label" for="ddlQuiz">Quiz</label>
+            <asp:Label runat="server" AssociatedControlID="ddlQuiz" CssClass="form-label" Text="Quiz" />
             <asp:DropDownList ID="ddlQuiz" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddlQuiz_SelectedIndexChanged" />
         </div>
     </div>
@@ -36,24 +36,24 @@
             <div class="col-lg-4">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="mb-0" id="lblEditorHeading" runat="server">New question</h5>
+                        <h2 class="h5 mb-0" id="lblEditorHeading" runat="server">New question</h2>
                     </div>
                     <div class="card-body">
                         <asp:HiddenField ID="hidQuestionId" runat="server" />
                         <div class="row g-3">
                             <div class="col-12">
-                                <label class="form-label" for="txtQuestionText">Question text</label>
+                                <asp:Label runat="server" AssociatedControlID="txtQuestionText" CssClass="form-label" Text="Question text" />
                                 <asp:TextBox ID="txtQuestionText" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3" />
                             </div>
                             <div class="col-12">
-                                <label class="form-label" for="txtMarks">Marks</label>
+                                <asp:Label runat="server" AssociatedControlID="txtMarks" CssClass="form-label" Text="Marks" />
                                 <asp:TextBox ID="txtMarks" runat="server" CssClass="form-control" Text="1" />
                                 <asp:RegularExpressionValidator runat="server" ControlToValidate="txtMarks"
                                     ValidationExpression="^[1-9][0-9]*$" ErrorMessage="Whole number." CssClass="text-danger" Display="Dynamic" />
                             </div>
                         </div>
 
-                        <h6 class="mt-4">Answer options (tick the correct one(s))</h6>
+                        <h3 class="h6 mt-4">Answer options (tick the correct one(s))</h3>
                         <div class="row g-2">
                             <asp:Repeater ID="rptAnswerRows" runat="server">
                                 <ItemTemplate>
@@ -69,7 +69,7 @@
                             </asp:Repeater>
                         </div>
 
-                        <asp:Label ID="lblMessage" runat="server" CssClass="text-danger d-block mt-2" Visible="false" />
+                        <asp:Label ID="lblMessage" runat="server" CssClass="text-danger d-block mt-2" Visible="false" role="alert" />
                         <div class="mt-3">
                             <asp:Button ID="btnSave" runat="server" Text="Save question" CssClass="btn btn-primary" OnClick="btnSave_Click" />
                             <asp:Button ID="btnCancelEdit" runat="server" Text="Cancel" CssClass="btn btn-outline-secondary" OnClick="btnCancelEdit_Click" Visible="false" />

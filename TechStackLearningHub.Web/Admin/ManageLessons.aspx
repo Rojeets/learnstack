@@ -3,11 +3,11 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row g-3 mb-4">
         <div class="col-md-4">
-            <label class="form-label" for="ddlCourse">Course</label>
+            <asp:Label runat="server" AssociatedControlID="ddlCourse" CssClass="form-label" Text="Course" />
             <asp:DropDownList ID="ddlCourse" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddlCourse_SelectedIndexChanged" />
         </div>
         <div class="col-md-4">
-            <label class="form-label" for="ddlModule">Module</label>
+            <asp:Label runat="server" AssociatedControlID="ddlModule" CssClass="form-label" Text="Module" />
             <asp:DropDownList ID="ddlModule" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddlModule_SelectedIndexChanged" />
         </div>
     </div>
@@ -44,31 +44,31 @@
             <div class="col-lg-4">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="mb-0" id="lblEditorHeading" runat="server">New lesson</h5>
+                        <h2 class="h5 mb-0" id="lblEditorHeading" runat="server">New lesson</h2>
                     </div>
                     <div class="card-body">
                         <asp:HiddenField ID="hidLessonId" runat="server" />
                         <div class="row g-3">
                             <div class="col-12">
-                                <label class="form-label" for="txtLessonTitle">Lesson title</label>
+                                <asp:Label runat="server" AssociatedControlID="txtLessonTitle" CssClass="form-label" Text="Lesson title" />
                                 <asp:TextBox ID="txtLessonTitle" runat="server" CssClass="form-control" />
                             </div>
                             <div class="col-12">
-                                <label class="form-label" for="txtContentHtml">Lesson content (HTML allowed)</label>
+                                <asp:Label runat="server" AssociatedControlID="txtContentHtml" CssClass="form-label" Text="Lesson content (HTML allowed)" />
                                 <asp:TextBox ID="txtContentHtml" runat="server" TextMode="MultiLine" Rows="8" CssClass="form-control"
                                     placeholder="Introductory paragraphs, code samples, headings..." />
                             </div>
                             <div class="col-12">
-                                <label class="form-label" for="txtVideoUrl">Video URL (YouTube embed / Vimeo player)</label>
+                                <asp:Label runat="server" AssociatedControlID="txtVideoUrl" CssClass="form-label" Text="Video URL (YouTube embed / Vimeo player)" />
                                 <asp:TextBox ID="txtVideoUrl" runat="server" CssClass="form-control" Placeholder="https://www.youtube.com/embed/..." />
                             </div>
                             <div class="col-12">
-                                <label class="form-label" for="fupNotes">Notes file (PDF/DOCX/TXT)</label>
+                                <asp:Label runat="server" AssociatedControlID="fupNotes" CssClass="form-label" Text="Notes file (PDF/DOCX/TXT)" />
                                 <asp:FileUpload ID="fupNotes" runat="server" CssClass="form-control" />
                                 <asp:Label ID="lblCurrentNotes" runat="server" CssClass="form-text d-block" />
                             </div>
                         </div>
-                        <asp:Label ID="lblMessage" runat="server" CssClass="text-danger d-block mt-2" Visible="false" />
+                        <asp:Label ID="lblMessage" runat="server" CssClass="text-danger d-block mt-2" Visible="false" role="alert" />
                         <div class="mt-3">
                             <asp:Button ID="btnSave" runat="server" Text="Save lesson" CssClass="btn btn-primary" OnClick="btnSave_Click" />
                             <asp:Button ID="btnCancelEdit" runat="server" Text="Cancel" CssClass="btn btn-outline-secondary" OnClick="btnCancelEdit_Click" Visible="false" />

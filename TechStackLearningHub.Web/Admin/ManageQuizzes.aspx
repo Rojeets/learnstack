@@ -3,11 +3,11 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="row g-3 mb-4">
         <div class="col-md-4">
-            <label class="form-label" for="ddlCourse">Course</label>
+            <asp:Label runat="server" AssociatedControlID="ddlCourse" CssClass="form-label" Text="Course" />
             <asp:DropDownList ID="ddlCourse" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddlCourse_SelectedIndexChanged" />
         </div>
         <div class="col-md-4">
-            <label class="form-label" for="ddlModule">Module</label>
+            <asp:Label runat="server" AssociatedControlID="ddlModule" CssClass="form-label" Text="Module" />
             <asp:DropDownList ID="ddlModule" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddlModule_SelectedIndexChanged" />
         </div>
     </div>
@@ -50,17 +50,17 @@
                     <asp:HiddenField ID="hidQuizId" runat="server" />
                     <div class="row g-3">
                         <div class="col-12">
-                            <label class="form-label" for="txtQuizTitle">Quiz title</label>
+                            <asp:Label runat="server" AssociatedControlID="txtQuizTitle" CssClass="form-label" Text="Quiz title" />
                             <asp:TextBox ID="txtQuizTitle" runat="server" CssClass="form-control" />
                         </div>
                         <div class="col-12">
-                            <label class="form-label" for="txtPassMark">Pass mark (0-100)</label>
+                            <asp:Label runat="server" AssociatedControlID="txtPassMark" CssClass="form-label" Text="Pass mark (0-100)" />
                             <asp:TextBox ID="txtPassMark" runat="server" CssClass="form-control" Text="50" />
                             <asp:RegularExpressionValidator runat="server" ControlToValidate="txtPassMark"
                                 ValidationExpression="^(100|[1-9][0-9]|[0-9])$" ErrorMessage="Enter 0-100." CssClass="text-danger" Display="Dynamic" />
                         </div>
                         <div class="col-12">
-                            <label class="form-label" for="txtDurationMinutes">Time limit (minutes)</label>
+                            <asp:Label runat="server" AssociatedControlID="txtDurationMinutes" CssClass="form-label" Text="Time limit (minutes)" />
                             <asp:TextBox ID="txtDurationMinutes" runat="server" CssClass="form-control" />
                             <asp:RegularExpressionValidator runat="server" ControlToValidate="txtDurationMinutes"
                                 ValidationExpression="^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-3][0-9]|240)$"
@@ -72,7 +72,7 @@
                             </div>
                         </div>
                     </div>
-                    <asp:Label ID="lblMessage" runat="server" CssClass="text-danger d-block mt-2" Visible="false" />
+                    <asp:Label ID="lblMessage" runat="server" CssClass="text-danger d-block mt-2" Visible="false" role="alert" />
                     <div class="mt-3">
                         <asp:Button ID="btnSaveQuiz" runat="server" Text="Save quiz" CssClass="btn btn-primary" OnClick="btnSaveQuiz_Click" />
                         <asp:Button ID="btnCancelEdit" runat="server" Text="Cancel" CssClass="btn btn-outline-secondary" OnClick="btnCancelEdit_Click" Visible="false" />
