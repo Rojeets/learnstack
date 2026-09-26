@@ -20,6 +20,7 @@
                          appearing silently below the fields. --%>
                     <asp:Label ID="lblError" runat="server" CssClass="text-danger d-block" Visible="false" role="alert" />
                     <asp:Button ID="btnLogin" runat="server" Text="Log in" CssClass="btn btn-primary" OnClick="btnLogin_Click" />
+                    <a class="btn btn-link ps-0" href="<%= ResolveUrl("~/Account/ForgotPassword.aspx") %>">Forgot your password?</a>
                 </div>
             </div>
         </div>

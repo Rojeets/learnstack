@@ -113,6 +113,35 @@ CREATE TABLE Progress (
     CONSTRAINT UQ_User_Lesson UNIQUE (UserID, LessonID)
 );
 
+-- Password-reset requests. Lives with the other Users child tables (Results,
+-- Progress) because a token is meaningless without its account: CASCADE means
+-- deleting a user takes their outstanding reset links with them instead of
+-- leaving live credentials pointing at a UserID that no longer exists.
+CREATE TABLE PasswordResetTokens (
+    TokenID      INT IDENTITY(1,1) PRIMARY KEY,
+    UserID       INT NOT NULL FOREIGN KEY REFERENCES Users(UserID) ON DELETE CASCADE,
+    -- SHA-256 of the emailed token, never the token itself. The 32-byte token
+    -- is CSPRNG output, so it cannot be brute-forced, but a table read would
+    -- otherwise hand out every live reset link in the system; storing only the
+    -- hash means a database leak yields nothing replayable. Same reasoning as
+    -- the per-user salt on Users.PasswordHash.
+    TokenHash    NVARCHAR(256) NOT NULL,
+    ExpiresAt    DATETIME NOT NULL,
+    -- NULL while the token is still redeemable. Rows are never deleted on use:
+    -- stamping the column is what makes redemption single-use (the
+    -- "AND UsedAt IS NULL" guard on the UPDATE), and keeping the row means a
+    -- replay is refused for a reason that can be audited.
+    UsedAt       DATETIME NULL,
+    CreatedDate  DATETIME NOT NULL DEFAULT GETDATE()
+);
+-- UNIQUE because the lookup is by hash and a duplicate would make
+-- "which row did this token match?" ambiguous; lookups are by hash only, so
+-- this also serves as the covering index for them.
+CREATE UNIQUE INDEX UX_PasswordResetTokens_TokenHash ON PasswordResetTokens(TokenHash);
+-- Supports "invalidate every outstanding token for this user", which runs on
+-- each new request and at the end of each successful reset.
+CREATE INDEX IX_PasswordResetTokens_UserID ON PasswordResetTokens(UserID);
+
 -- Seed the two roles the application logic depends on by name.
 INSERT INTO Roles (RoleName) VALUES ('Student'), ('Admin');
 GO

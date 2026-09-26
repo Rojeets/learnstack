@@ -13,6 +13,18 @@ namespace TechStackLearningHub.Web.Account
             if (IsPostBack)
                 return;
 
+            // ResetPassword.aspx lands here with ?reset=1 once a token has been
+            // redeemed, so the user is told the password they were just reset to
+            // is the one in front of them. Same pattern as the ?registered=1
+            // block in Register.aspx.cs: first request only, and the CssClass is
+            // swapped so the same label can carry a success instead of a failure.
+            if (Request.QueryString["reset"] == "1")
+            {
+                lblError.CssClass = "text-success";
+                lblError.Text = "Your password has been reset. You can now log in with your new password.";
+                lblError.Visible = true;
+            }
+
             string roleName = AuthBLL.CurrentRoleName;
             if (!string.IsNullOrEmpty(roleName))
             {
