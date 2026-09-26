@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -45,6 +46,13 @@ namespace TechStackLearningHub.Web.Account
                 lblError.CssClass = "text-danger";
                 lblError.Text = HttpUtility.HtmlEncode(ex.Message);
                 lblError.Visible = true;
+            }
+            catch (ThreadAbortException)
+            {
+                // Response.Redirect throws ThreadAbortException to end the
+                // request. Rethrow so a successful redirect is not mistaken
+                // for a fault and logged.
+                throw;
             }
             catch (Exception ex)
             {

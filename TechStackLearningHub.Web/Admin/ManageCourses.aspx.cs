@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -103,6 +104,11 @@ namespace TechStackLearningHub.Web.Admin
                         break;
                 }
                 BindGrid();
+            }
+            catch (ThreadAbortException)
+            {
+                // The ManageModules command redirects out; that is a success.
+                throw;
             }
             catch (Exception ex)
             {

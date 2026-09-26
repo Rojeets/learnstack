@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using TechStackLearningHub.Web.BLL;
@@ -116,6 +117,11 @@ namespace TechStackLearningHub.Web.Admin
                 }
                 ClearMessage();
                 LoadWorkspace();
+            }
+            catch (ThreadAbortException)
+            {
+                // The ManageLessons command redirects out; that is a success.
+                throw;
             }
             catch (Exception ex)
             {
