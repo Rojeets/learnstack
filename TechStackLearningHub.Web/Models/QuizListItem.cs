@@ -11,6 +11,7 @@ namespace TechStackLearningHub.Web.Models
         public int QuizID { get; set; }
         public string QuizTitle { get; set; }
         public int PassMarkPercent { get; set; }
+        public int? DurationMinutes { get; set; }
         public string ModuleTitle { get; set; }
         public string CourseName { get; set; }
     }

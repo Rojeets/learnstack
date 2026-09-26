@@ -4,6 +4,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using TechStackLearningHub.Web.BLL;
 using TechStackLearningHub.Web.Helpers;
+using TechStackLearningHub.Web.Masterpages;
 
 namespace TechStackLearningHub.Web.Admin
 {
@@ -13,6 +14,13 @@ namespace TechStackLearningHub.Web.Admin
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            // The admin shell (topbar title, highlighted sidebar link) lives in
+            // Admin.Master and reads its state from these two calls, so they run
+            // before the IsPostBack early-return: a postback render comes back
+            // through here too, and would otherwise come up untitled.
+            var master = (AdminMaster)Master;
+            master.SetPageTitle("Manage Users");
+            master.SetActiveNav("ManageUsers.aspx");
 
             if (!IsPostBack)
                 BindGrid();

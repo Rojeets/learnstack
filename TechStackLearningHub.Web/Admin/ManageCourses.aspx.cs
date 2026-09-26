@@ -5,6 +5,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using TechStackLearningHub.Web.BLL;
 using TechStackLearningHub.Web.Helpers;
+using TechStackLearningHub.Web.Masterpages;
 using TechStackLearningHub.Web.Models;
 
 namespace TechStackLearningHub.Web.Admin
@@ -15,6 +16,14 @@ namespace TechStackLearningHub.Web.Admin
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            // The topbar title and the sidebar highlight are rendered by the
+            // master in Master.Load, which runs after this handler - so they
+            // have to be set on every request, before the IsPostBack guard.
+            // Skipping them on postback would blank the title on every save,
+            // delete and Edit/Publish click.
+            var master = (AdminMaster)Master;
+            master.SetPageTitle("Manage Courses");
+            master.SetActiveNav("ManageCourses.aspx");
 
             if (!IsPostBack)
             {

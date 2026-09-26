@@ -7,7 +7,7 @@ namespace TechStackLearningHub.Web.Data_Access_Layer
 {
     public class QuizDAL
     {
-        private const string SelectColumns = "QuizID, ModuleID, QuizTitle, PassMarkPercent";
+        private const string SelectColumns = "QuizID, ModuleID, QuizTitle, PassMarkPercent, DurationMinutes";
 
         public Quiz SelectById(int quizId)
         {
@@ -50,7 +50,7 @@ namespace TechStackLearningHub.Web.Data_Access_Layer
         {
             var list = new List<QuizListItem>();
             const string sql =
-                "SELECT q.QuizID, q.QuizTitle, q.PassMarkPercent, m.ModuleTitle, c.CourseName " +
+                "SELECT q.QuizID, q.QuizTitle, q.PassMarkPercent, q.DurationMinutes, m.ModuleTitle, c.CourseName " +
                 "FROM Quiz q " +
                 "JOIN Modules m ON m.ModuleID = q.ModuleID " +
                 "JOIN Courses c ON c.CourseID = m.CourseID " +
@@ -69,6 +69,7 @@ namespace TechStackLearningHub.Web.Data_Access_Layer
                             QuizID = DbHelper.GetInt(r, "QuizID"),
                             QuizTitle = DbHelper.GetString(r, "QuizTitle"),
                             PassMarkPercent = DbHelper.GetInt(r, "PassMarkPercent"),
+                            DurationMinutes = DbHelper.GetNullableInt(r, "DurationMinutes"),
                             ModuleTitle = DbHelper.GetString(r, "ModuleTitle"),
                             CourseName = DbHelper.GetString(r, "CourseName")
                         });
@@ -81,8 +82,8 @@ namespace TechStackLearningHub.Web.Data_Access_Layer
         public int Insert(Quiz quiz)
         {
             const string sql =
-                "INSERT INTO Quiz (ModuleID, QuizTitle, PassMarkPercent) " +
-                "VALUES (@ModuleID, @QuizTitle, @PassMarkPercent); " +
+                "INSERT INTO Quiz (ModuleID, QuizTitle, PassMarkPercent, DurationMinutes) " +
+                "VALUES (@ModuleID, @QuizTitle, @PassMarkPercent, @DurationMinutes); " +
                 "SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
             using (var con = DbHelper.GetConnection())
@@ -91,6 +92,7 @@ namespace TechStackLearningHub.Web.Data_Access_Layer
                 DbHelper.AddParam(cmd, "@ModuleID", SqlDbType.Int, 0, quiz.ModuleID);
                 DbHelper.AddParam(cmd, "@QuizTitle", SqlDbType.NVarChar, 150, quiz.QuizTitle);
                 DbHelper.AddParam(cmd, "@PassMarkPercent", SqlDbType.Int, 0, quiz.PassMarkPercent);
+                DbHelper.AddParam(cmd, "@DurationMinutes", SqlDbType.Int, 0, (object)quiz.DurationMinutes);
                 con.Open();
                 return (int)cmd.ExecuteScalar();
             }
@@ -99,7 +101,8 @@ namespace TechStackLearningHub.Web.Data_Access_Layer
         public void Update(Quiz quiz)
         {
             const string sql =
-                "UPDATE Quiz SET QuizTitle = @QuizTitle, PassMarkPercent = @PassMarkPercent " +
+                "UPDATE Quiz SET QuizTitle = @QuizTitle, PassMarkPercent = @PassMarkPercent, " +
+                "DurationMinutes = @DurationMinutes " +
                 "WHERE QuizID = @QuizId";
 
             using (var con = DbHelper.GetConnection())
@@ -107,6 +110,7 @@ namespace TechStackLearningHub.Web.Data_Access_Layer
             {
                 DbHelper.AddParam(cmd, "@QuizTitle", SqlDbType.NVarChar, 150, quiz.QuizTitle);
                 DbHelper.AddParam(cmd, "@PassMarkPercent", SqlDbType.Int, 0, quiz.PassMarkPercent);
+                DbHelper.AddParam(cmd, "@DurationMinutes", SqlDbType.Int, 0, (object)quiz.DurationMinutes);
                 DbHelper.AddParam(cmd, "@QuizId", SqlDbType.Int, 0, quiz.QuizID);
                 con.Open();
                 cmd.ExecuteNonQuery();
@@ -133,7 +137,8 @@ namespace TechStackLearningHub.Web.Data_Access_Layer
                 QuizID = DbHelper.GetInt(r, "QuizID"),
                 ModuleID = DbHelper.GetInt(r, "ModuleID"),
                 QuizTitle = DbHelper.GetString(r, "QuizTitle"),
-                PassMarkPercent = DbHelper.GetInt(r, "PassMarkPercent")
+                PassMarkPercent = DbHelper.GetInt(r, "PassMarkPercent"),
+                DurationMinutes = DbHelper.GetNullableInt(r, "DurationMinutes")
             };
         }
     }

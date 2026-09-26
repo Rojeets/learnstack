@@ -5,6 +5,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using TechStackLearningHub.Web.BLL;
 using TechStackLearningHub.Web.Helpers;
+using TechStackLearningHub.Web.Masterpages;
 using TechStackLearningHub.Web.Models;
 
 namespace TechStackLearningHub.Web.Admin
@@ -20,6 +21,13 @@ namespace TechStackLearningHub.Web.Admin
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            // The admin shell (topbar title, highlighted sidebar link) lives in
+            // Admin.Master and reads its state from these two calls, so they run
+            // before the IsPostBack early-return: a postback render comes back
+            // through here too, and would otherwise come up untitled.
+            var master = (AdminMaster)Master;
+            master.SetPageTitle("Manage Lessons");
+            master.SetActiveNav("ManageLessons.aspx");
 
             if (!IsPostBack)
             {
@@ -40,17 +48,37 @@ namespace TechStackLearningHub.Web.Admin
             }
 
             int courseId;
-            if (int.TryParse(Request.QueryString["CourseID"], out courseId))
+            bool haveCourse = int.TryParse(Request.QueryString["CourseID"], out courseId) && courseId > 0;
+            if (haveCourse)
             {
                 ListItem item = ddlCourse.Items.FindByValue(courseId.ToString());
                 if (item != null)
                     ddlCourse.SelectedValue = courseId.ToString();
             }
 
+            int moduleId;
+            bool haveModule = int.TryParse(Request.QueryString["ModuleID"], out moduleId) && moduleId > 0;
+
+            // A ModuleID-only link is what the ManageModules "Lessons" action
+            // produces. The module dropdown is populated from the selected
+            // course, so without resolving the parent course here the module
+            // could never be selected and the page came up empty. Deriving the
+            // course makes the deep link work on its own, whether or not the
+            // caller also sent CourseID.
+            if (!haveCourse && haveModule)
+            {
+                int derivedCourseId = _moduleBLL.GetCourseIdForModule(moduleId);
+                if (derivedCourseId > 0)
+                {
+                    ListItem derived = ddlCourse.Items.FindByValue(derivedCourseId.ToString());
+                    if (derived != null)
+                        ddlCourse.SelectedValue = derivedCourseId.ToString();
+                }
+            }
+
             BindModuleOptions();
 
-            int moduleId;
-            if (int.TryParse(Request.QueryString["ModuleID"], out moduleId))
+            if (haveModule)
             {
                 ListItem moduleItem = ddlModule.Items.FindByValue(moduleId.ToString());
                 if (moduleItem != null)
@@ -94,6 +122,15 @@ namespace TechStackLearningHub.Web.Admin
             }
         }
 
+        private int CurrentCourseId
+        {
+            get
+            {
+                int courseId;
+                return int.TryParse(ddlCourse.SelectedValue, out courseId) ? courseId : 0;
+            }
+        }
+
         private void LoadWorkspace()
         {
             if (CurrentModuleId <= 0)
@@ -102,6 +139,14 @@ namespace TechStackLearningHub.Web.Admin
                 return;
             }
             pnlWorkspace.Visible = true;
+
+            // A module owns at most one quiz, so this is a module-level action
+            // rather than a per-lesson one. Without it there was no way to reach
+            // a module's quiz from its lessons at all.
+            lnkManageQuizzes.Visible = true;
+            lnkManageQuizzes.NavigateUrl = HttpUtility.HtmlAttributeEncode(
+                "ManageQuizzes.aspx?CourseID=" + CurrentCourseId + "&ModuleID=" + CurrentModuleId);
+
             grdLessons.DataSource = _lessonBLL.GetLessonsForModule(CurrentModuleId);
             grdLessons.DataBind();
         }

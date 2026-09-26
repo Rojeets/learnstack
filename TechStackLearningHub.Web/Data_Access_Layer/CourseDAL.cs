@@ -147,9 +147,41 @@ namespace TechStackLearningHub.Web.Data_Access_Layer
             }
         }
 
-        // All four read methods above select the same column list, so one Map
-        // covers them. ModuleCount is a computed property, never selected -
-        // CourseBLL fills it in.
+        /// <summary>
+        /// Course totals per tech stack for the admin dashboard. Ordered by
+        /// count descending so the bars read largest-first, and by name as the
+        /// tie-break so two stacks with the same count cannot swap places
+        /// between renders.
+        /// </summary>
+        public List<TechStackCourseCount> SelectCourseCountsByTechStack()
+        {
+            var list = new List<TechStackCourseCount>();
+            const string sql =
+                "SELECT TechStack, COUNT(*) AS CourseCount FROM Courses " +
+                "GROUP BY TechStack ORDER BY COUNT(*) DESC, TechStack";
+
+            using (var con = DbHelper.GetConnection())
+            using (var cmd = DbHelper.CreateCommand(con, sql))
+            {
+                con.Open();
+                using (var r = cmd.ExecuteReader())
+                {
+                    while (r.Read())
+                    {
+                        list.Add(new TechStackCourseCount
+                        {
+                            TechStack = DbHelper.GetString(r, "TechStack"),
+                            CourseCount = DbHelper.GetInt(r, "CourseCount")
+                        });
+                    }
+                }
+            }
+            return list;
+        }
+
+        // The Course-shaped read methods above all select the same column
+        // list, so one Map covers them. ModuleCount is a computed property,
+        // never selected - CourseBLL fills it in.
         private Course Map(IDataRecord r)
         {
             return new Course

@@ -5,6 +5,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using TechStackLearningHub.Web.BLL;
 using TechStackLearningHub.Web.Helpers;
+using TechStackLearningHub.Web.Masterpages;
 using TechStackLearningHub.Web.Models;
 
 namespace TechStackLearningHub.Web.Admin
@@ -16,6 +17,13 @@ namespace TechStackLearningHub.Web.Admin
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Set before the IsPostBack guard: the master renders the topbar
+            // title in Master.Load, i.e. after this handler, and this page
+            // auto-posts back whenever the course dropdown changes, so
+            // guarding these calls would blank the title on each change.
+            var master = (AdminMaster)Master;
+            master.SetPageTitle("Manage Modules");
+            master.SetActiveNav("ManageModules.aspx");
 
             if (!IsPostBack)
             {
@@ -108,7 +116,13 @@ namespace TechStackLearningHub.Web.Admin
                         pnlRename.Visible = false;
                         break;
                     case "ManageLessons":
-                        Response.Redirect("ManageLessons.aspx?ModuleID=" + moduleId);
+                        // Carry the course as well as the module so the target URL
+                        // is complete and shareable. ManageLessons can resolve a
+                        // bare ModuleID on its own, but sending the parent id
+                        // keeps the whole cascade self-describing in the address
+                        // bar and in a bookmark.
+                        Response.Redirect("ManageLessons.aspx?CourseID="
+                            + CurrentCourseId + "&ModuleID=" + moduleId);
                         break;
                     case "MoveUp":
                     case "MoveDown":

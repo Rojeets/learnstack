@@ -1,10 +1,7 @@
 <%@ Page Title="Manage Users" Language="C#" MasterPageFile="~/Masterpages/Admin.Master" AutoEventWireup="true" CodeBehind="ManageUsers.aspx.cs" Inherits="TechStackLearningHub.Web.Admin.ManageUsers" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-    <h1>Manage Users</h1>
-    <p class="lead">Activate or deactivate accounts and adjust roles.</p>
-
-    <asp:GridView ID="grdUsers" runat="server" AutoGenerateColumns="false" CssClass="table table-striped"
+    <asp:GridView ID="grdUsers" runat="server" AutoGenerateColumns="false" CssClass="table table-hover mb-0"
         DataKeyNames="UserID" OnRowCommand="grdUsers_RowCommand" EmptyDataText="No users registered yet.">
         <Columns>
             <asp:BoundField DataField="Username" HeaderText="Username" />

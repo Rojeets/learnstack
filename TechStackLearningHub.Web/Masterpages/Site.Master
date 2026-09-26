@@ -57,6 +57,11 @@
             </footer>
         </div>
     </form>
+    <%-- WebForms.js defines WebForm_DoPostBackWithOptions, which the Web Forms
+         runtime emits for controls that need postback options (for example the
+         LinkButtons in the module, quiz and question grids). Without this the
+         helper is undefined and those buttons silently do nothing. --%>
+    <script src="<%= ResolveUrl("~/bundles/WebFormsJs") %>"></script>
     <script src="<%= ResolveUrl("~/Scripts/bootstrap.bundle.min.js") %>"></script>
 </body>
 </html>
