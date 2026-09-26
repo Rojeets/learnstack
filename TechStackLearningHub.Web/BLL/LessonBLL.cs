@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using TechStackLearningHub.Data_Access_Layer;
-using TechStackLearningHub.Helpers;
-using TechStackLearningHub.Models;
+using TechStackLearningHub.Web.Data_Access_Layer;
+using TechStackLearningHub.Web.Helpers;
+using TechStackLearningHub.Web.Models;
 
-namespace TechStackLearningHub.BLL
+namespace TechStackLearningHub.Web.BLL
 {
     public class LessonBLL
     {

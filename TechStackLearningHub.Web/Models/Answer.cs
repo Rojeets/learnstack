@@ -1,4 +1,4 @@
-namespace TechStackLearningHub.Models
+namespace TechStackLearningHub.Web.Models
 {
     public class Answer
     {

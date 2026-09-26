@@ -1,4 +1,4 @@
-namespace TechStackLearningHub.Models
+namespace TechStackLearningHub.Web.Models
 {
     /// <summary>
     /// A student's completion percentage for one course, as shown on the

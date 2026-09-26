@@ -1,4 +1,4 @@
-namespace TechStackLearningHub.Models
+namespace TechStackLearningHub.Web.Models
 {
     /// <summary>
     /// Aggregated attempt statistics for a single quiz, used by the admin

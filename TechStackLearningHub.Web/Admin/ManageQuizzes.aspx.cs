@@ -2,9 +2,9 @@ using System;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using TechStackLearningHub.BLL;
-using TechStackLearningHub.Helpers;
-using TechStackLearningHub.Models;
+using TechStackLearningHub.Web.BLL;
+using TechStackLearningHub.Web.Helpers;
+using TechStackLearningHub.Web.Models;
 
 namespace TechStackLearningHub.Web.Admin
 {

@@ -1,6 +1,6 @@
 using System;
 using System.Web.UI;
-using TechStackLearningHub.BLL;
+using TechStackLearningHub.Web.BLL;
 
 namespace TechStackLearningHub.Web.Pages
 {

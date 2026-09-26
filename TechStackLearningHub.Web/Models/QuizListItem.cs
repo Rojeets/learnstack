@@ -1,4 +1,4 @@
-namespace TechStackLearningHub.Models
+namespace TechStackLearningHub.Web.Models
 {
     /// <summary>
     /// One row for the admin quiz picker, which spans every course and module

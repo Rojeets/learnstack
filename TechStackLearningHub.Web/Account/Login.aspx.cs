@@ -2,7 +2,7 @@ using System;
 using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using TechStackLearningHub.BLL;
+using TechStackLearningHub.Web.BLL;
 
 namespace TechStackLearningHub.Web.Account
 {

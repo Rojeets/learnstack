@@ -2,7 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 
-namespace TechStackLearningHub.Helpers
+namespace TechStackLearningHub.Web.Helpers
 {
     /// <summary>
     /// Password derivation. The ONLY place that touches password cryptography.

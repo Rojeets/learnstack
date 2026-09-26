@@ -3,7 +3,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace TechStackLearningHub.Data_Access_Layer
+namespace TechStackLearningHub.Web.Data_Access_Layer
 {
     /// <summary>
     /// All ADO.NET plumbing lives here. No business rules - this class only

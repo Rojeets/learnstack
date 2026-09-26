@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using TechStackLearningHub.Data_Access_Layer;
-using TechStackLearningHub.Models;
+using TechStackLearningHub.Web.Data_Access_Layer;
+using TechStackLearningHub.Web.Models;
 
-namespace TechStackLearningHub.BLL
+namespace TechStackLearningHub.Web.BLL
 {
     public class ProgressBLL
     {

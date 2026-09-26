@@ -1,6 +1,6 @@
 using System;
 
-namespace TechStackLearningHub.Models
+namespace TechStackLearningHub.Web.Models
 {
     /// <summary>
     /// One row in a student's quiz history. Joined out of Results + Quiz +

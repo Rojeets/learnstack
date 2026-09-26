@@ -349,7 +349,7 @@
     <Compile Include="Helpers\ErrorLogger.cs" />
     <Compile Include="Helpers\PasswordHelper.cs" />
     <Compile Include="Helpers\SqlErrorHelper.cs" />
-    <Compile Include="Helpers\ValidationException.cs" />
+    <Compile Include="BLL\ValidationException.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BLL\AuthBLL.cs" />

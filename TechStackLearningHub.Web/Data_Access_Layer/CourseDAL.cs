@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using TechStackLearningHub.Models;
+using TechStackLearningHub.Web.Models;
 
-namespace TechStackLearningHub.Data_Access_Layer
+namespace TechStackLearningHub.Web.Data_Access_Layer
 {
     /// <summary>
     /// All SQL for the Courses table. Every method follows the same shape:

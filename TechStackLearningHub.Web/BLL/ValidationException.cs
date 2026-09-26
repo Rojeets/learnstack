@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace TechStackLearningHub.Helpers
+namespace TechStackLearningHub.Web.BLL
 {
     /// <summary>
     /// A failure the user is allowed to see.
@@ -16,6 +16,14 @@ namespace TechStackLearningHub.Helpers
     /// In other words: throwing this type is a promise that the text is
     /// deliberate, authored, and free of connection strings, SQL, or stack
     /// detail.
+    ///
+    /// It lives in the BLL (not Helpers) because it is part of the service
+    /// contract a page consumes: BLLs throw it, pages catch it.
+    ///
+    /// catch blocks run in order, so the specific type must be caught BEFORE
+    /// the general one:
+    ///   catch (ValidationException vex) { ShowError(vex.Message); }
+    ///   catch (Exception ex) { ErrorLogger.Log(ex, "context"); ShowError("Something went wrong."); }
     /// </summary>
     [Serializable]
     public class ValidationException : Exception

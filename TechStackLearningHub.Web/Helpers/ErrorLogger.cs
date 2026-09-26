@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Web;
 
-namespace TechStackLearningHub.Helpers
+namespace TechStackLearningHub.Web.Helpers
 {
     /// <summary>
     /// Appends exceptions to a text file under App_Data. ASP.NET blocks HTTP

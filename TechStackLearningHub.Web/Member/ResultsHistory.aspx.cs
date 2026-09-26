@@ -1,7 +1,7 @@
 using System;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using TechStackLearningHub.BLL;
+using TechStackLearningHub.Web.BLL;
 
 namespace TechStackLearningHub.Web.Member
 {

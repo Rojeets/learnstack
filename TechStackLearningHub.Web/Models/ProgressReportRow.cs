@@ -1,4 +1,4 @@
-namespace TechStackLearningHub.Models
+namespace TechStackLearningHub.Web.Models
 {
     /// <summary>
     /// One row of the admin progress report: every student's completion

@@ -1,6 +1,6 @@
 using System;
 
-namespace TechStackLearningHub.Models
+namespace TechStackLearningHub.Web.Models
 {
     /// <summary>
     /// One row of the admin activity report. Joins Results all the way out to

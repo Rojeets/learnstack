@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("learnstack")]
+[assembly: AssemblyTitle("TechStackLearningHub.Web")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Dockur")]
-[assembly: AssemblyProduct("learnstack")]
+[assembly: AssemblyProduct("TechStackLearningHub.Web")]
 [assembly: AssemblyCopyright("Copyright © Dockur 2026")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

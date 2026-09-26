@@ -1,6 +1,6 @@
 using System;
 
-namespace TechStackLearningHub.Models
+namespace TechStackLearningHub.Web.Models
 {
     public class Progress
     {

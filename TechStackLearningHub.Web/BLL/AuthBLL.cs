@@ -1,11 +1,12 @@
 using System;
+using System.Data.SqlClient;
 using System.Web;
 using System.Web.Security;
-using TechStackLearningHub.Data_Access_Layer;
-using TechStackLearningHub.Helpers;
-using TechStackLearningHub.Models;
+using TechStackLearningHub.Web.Data_Access_Layer;
+using TechStackLearningHub.Web.Helpers;
+using TechStackLearningHub.Web.Models;
 
-namespace TechStackLearningHub.BLL
+namespace TechStackLearningHub.Web.BLL
 {
     // Login outcome. Deactivated is a distinct state so the calling page can
     // show an accurate message instead of "invalid credentials".
@@ -63,7 +64,24 @@ namespace TechStackLearningHub.BLL
             if (user.RoleID <= 0)
                 throw new InvalidOperationException("The Student role is not configured.");
 
-            _userDAL.Insert(user);
+            try
+            {
+                _userDAL.Insert(user);
+            }
+            catch (SqlException sqlEx)
+            {
+                // The check above rejects a duplicate username, but two
+                // simultaneous registrations can still race past it, and Email
+                // has its own UNIQUE index that nothing pre-checks. Translate
+                // both into one authored message instead of letting a raw
+                // SqlException surface as a generic failure.
+                ValidationException vex = SqlErrorHelper.Translate(
+                    sqlEx, uniqueMessage: "That username or email address is already registered.");
+                if (vex != null) throw vex;
+
+                ErrorLogger.Log(sqlEx, "AuthBLL.Register");
+                throw new ValidationException("A database error occurred. Please try again.");
+            }
             return true;
         }
 
