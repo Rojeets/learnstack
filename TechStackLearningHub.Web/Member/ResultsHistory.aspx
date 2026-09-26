@@ -4,7 +4,7 @@
     <h1>Quiz History</h1>
     <p class="lead">Your past quiz attempts.</p>
 
-    <asp:GridView ID="grdHistory" runat="server" AutoGenerateColumns="false" CssClass="table table-striped" EmptyDataText="You have not taken any quizzes yet.">
+    <asp:GridView ID="grdHistory" runat="server" AutoGenerateColumns="false" CssClass="table table-striped" EmptyDataText="You have not taken any quizzes yet." AllowPaging="true" PageSize="10" PagerStyle-CssClass="grid-pager">
         <Columns>
             <asp:BoundField DataField="QuizTitle" HeaderText="Quiz" />
             <asp:BoundField DataField="ModuleTitle" HeaderText="Module" />
@@ -23,5 +23,6 @@
                 </ItemTemplate>
             </asp:TemplateField>
         </Columns>
+        <PagerSettings Mode="Numeric" Position="Bottom" PreviousPageText="&#8592; Newer" NextPageText="Older &#8594;" />
     </asp:GridView>
 </asp:Content>

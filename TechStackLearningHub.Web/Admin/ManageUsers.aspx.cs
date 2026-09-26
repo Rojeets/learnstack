@@ -24,12 +24,20 @@ namespace TechStackLearningHub.Web.Admin
 
             if (!IsPostBack)
                 BindGrid();
+            else if (GridPaging.IsPagerRequest(this, grdUsers))
+            {
+                BindGrid();
+                GridPaging.ApplyIndex(grdUsers, GridPaging.RequestedPage(this).GetValueOrDefault());
+                GridPaging.Rebind(grdUsers);
+            }
+
+            GridPaging.Wire(grdUsers);
         }
 
         private void BindGrid()
         {
             grdUsers.DataSource = _userBLL.GetAllUsersForAdmin();
-            grdUsers.DataBind();
+            GridPaging.Rebind(grdUsers);
         }
 
         protected void grdUsers_RowCommand(object sender, GridViewCommandEventArgs e)

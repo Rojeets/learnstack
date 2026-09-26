@@ -10,7 +10,7 @@
                 </div>
                 <div class="card-body p-0">
                     <asp:GridView ID="grdCourses" runat="server" AutoGenerateColumns="false" CssClass="table table-hover mb-0"
-                        DataKeyNames="CourseID" OnRowCommand="grdCourses_RowCommand" EmptyDataText="No courses yet.">
+                        DataKeyNames="CourseID" OnRowCommand="grdCourses_RowCommand" EmptyDataText="No courses yet." AllowPaging="true" PageSize="10" PagerStyle-CssClass="grid-pager">
                         <Columns>
                             <asp:BoundField DataField="CourseName" HeaderText="Course" />
                             <asp:BoundField DataField="TechStack" HeaderText="Tech stack" />
@@ -34,6 +34,7 @@
                                 </ItemTemplate>
                             </asp:TemplateField>
                         </Columns>
+                        <PagerSettings Mode="Numeric" Position="Bottom" PreviousPageText="&#8592; Newer" NextPageText="Older &#8594;" />
                     </asp:GridView>
                 </div>
             </div>

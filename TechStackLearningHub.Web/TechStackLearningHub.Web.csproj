@@ -351,6 +351,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\AdminUi.cs" />
+    <Compile Include="Helpers\GridPaging.cs" />
     <Compile Include="Helpers\ErrorLogger.cs" />
     <Compile Include="Helpers\PasswordHelper.cs" />
     <Compile Include="Helpers\SqlErrorHelper.cs" />

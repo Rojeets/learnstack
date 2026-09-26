@@ -2,6 +2,7 @@ using System;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using TechStackLearningHub.Web.BLL;
+using TechStackLearningHub.Web.Helpers;
 
 namespace TechStackLearningHub.Web.Member
 {
@@ -11,11 +12,22 @@ namespace TechStackLearningHub.Web.Member
         {
             AuthBLL.RequireLogin();
 
-            if (IsPostBack)
-                return;
+            if (!IsPostBack)
+                BindGrid();
+            else if (GridPaging.IsPagerRequest(this, grdHistory))
+            {
+                BindGrid();
+                GridPaging.ApplyIndex(grdHistory, GridPaging.RequestedPage(this).GetValueOrDefault());
+                GridPaging.Rebind(grdHistory);
+            }
 
+            GridPaging.Wire(grdHistory);
+        }
+
+        private void BindGrid()
+        {
             grdHistory.DataSource = new QuizBLL().GetQuizHistoryForUser(AuthBLL.CurrentUserId);
-            grdHistory.DataBind();
+            GridPaging.Rebind(grdHistory);
         }
     }
 }

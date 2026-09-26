@@ -32,6 +32,14 @@ namespace TechStackLearningHub.Web.Admin
                 }
                 BindGrid();
             }
+            else if (GridPaging.IsPagerRequest(this, grdCourses))
+            {
+                BindGrid();
+                GridPaging.ApplyIndex(grdCourses, GridPaging.RequestedPage(this).GetValueOrDefault());
+                GridPaging.Rebind(grdCourses);
+            }
+
+            GridPaging.Wire(grdCourses);
         }
 
         private void BindGrid()

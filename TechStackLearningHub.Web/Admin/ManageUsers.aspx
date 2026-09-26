@@ -3,7 +3,7 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <asp:GridView ID="grdUsers" runat="server" AutoGenerateColumns="false" CssClass="table table-hover mb-0"
-        DataKeyNames="UserID" OnRowCommand="grdUsers_RowCommand" EmptyDataText="No users registered yet.">
+        DataKeyNames="UserID" OnRowCommand="grdUsers_RowCommand" EmptyDataText="No users registered yet." AllowPaging="true" PageSize="10" PagerStyle-CssClass="grid-pager">
         <Columns>
             <asp:BoundField DataField="Username" HeaderText="Username" />
             <asp:BoundField DataField="Email" HeaderText="Email" />
@@ -29,6 +29,7 @@
                 </ItemTemplate>
             </asp:TemplateField>
         </Columns>
+        <PagerSettings Mode="Numeric" Position="Bottom" PreviousPageText="&#8592; Newer" NextPageText="Older &#8594;" />
     </asp:GridView>
 
     <asp:Label ID="lblMessage" runat="server" CssClass="text-danger" Visible="false" role="alert" />

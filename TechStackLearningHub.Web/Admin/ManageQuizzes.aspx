@@ -56,13 +56,13 @@
                         </div>
                         <div class="col-12">
                             <asp:Label runat="server" AssociatedControlID="txtPassMark" CssClass="form-label" Text="Pass mark (0-100)" />
-                            <asp:TextBox ID="txtPassMark" runat="server" CssClass="form-control" Text="50" />
+                            <asp:TextBox ID="txtPassMark" runat="server" CssClass="form-control form-control-narrow" Text="50" />
                             <asp:RegularExpressionValidator runat="server" ControlToValidate="txtPassMark"
                                 ValidationExpression="^(100|[1-9][0-9]|[0-9])$" ErrorMessage="Enter 0-100." CssClass="text-danger" Display="Dynamic" />
                         </div>
                         <div class="col-12">
                             <asp:Label runat="server" AssociatedControlID="txtDurationMinutes" CssClass="form-label" Text="Time limit (minutes)" />
-                            <asp:TextBox ID="txtDurationMinutes" runat="server" CssClass="form-control" />
+                            <asp:TextBox ID="txtDurationMinutes" runat="server" CssClass="form-control form-control-narrow" />
                             <asp:RegularExpressionValidator runat="server" ControlToValidate="txtDurationMinutes"
                                 ValidationExpression="^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-3][0-9]|240)$"
                                 ErrorMessage="Enter a time limit between 1 and 240 minutes."
